@@ -46,8 +46,8 @@ namespace Dungeoneers
             spriteBatch = new SpriteBatch(GraphicsDevice);
             loadSpriteDictionary();
 
-            //int seed = DateTime.Now.Millisecond;
-            int seed = 420;
+            int seed = DateTime.Now.Millisecond;
+            //int seed = 420;
 
             Console.WriteLine("current seed: " + seed);
 
@@ -96,7 +96,16 @@ namespace Dungeoneers
             {
                 int x = ((Position)torch.GetComponent("Position")).X;
                 int y = ((Position)torch.GetComponent("Position")).Y;
-                spriteBatch.Draw(spriteDict["wall_torch"], new Vector2(24 + (x * (scale * 8)), 24 + (y * (scale * 8))), ((Animation)torch.GetComponent("Animation")).SourceRect, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Animation animation = (Animation)torch.GetComponent("Animation");
+                spriteBatch.Draw(animation.SourceTexture, new Vector2(24 + (x * (scale * 8)), 24 + (y * (scale * 8))), animation.SourceRect, Color.White, 0f, Vector2.Zero, scale, animation.Effects, 0f);
+            }
+
+            foreach (Entity door in dungeon.doorList)
+            {
+                int x = ((Position)door.GetComponent("Position")).X;
+                int y = ((Position)door.GetComponent("Position")).Y;
+                Animation animation = (Animation)door.GetComponent("Animation");
+                spriteBatch.Draw(animation.SourceTexture, new Vector2(24 + (x * (scale * 8)), 24 + (y * (scale * 8))), animation.SourceRect, Color.White, 0f, Vector2.Zero, scale, animation.Effects, 0f);
             }
 
             spriteBatch.End();
@@ -114,6 +123,8 @@ namespace Dungeoneers
             spriteDict.Add("floor_norm", Content.Load<Texture2D>("env/floor_norm"));
             spriteDict.Add("wall_side_bot", Content.Load<Texture2D>("env/wall_side_bot"));
             spriteDict.Add("wall_exposed", Content.Load<Texture2D>("env/wall_exposed"));
+            spriteDict.Add("door_wood_ns", Content.Load<Texture2D>("env/door_wood_ns"));
+            spriteDict.Add("door_wood_we", Content.Load<Texture2D>("env/door_wood_we"));
         }
 
         private void drawDungeon(SpriteBatch batch)
