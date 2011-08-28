@@ -11,5 +11,6 @@ namespace Dungeoneers.framework
         public Entity Entity { get; set; }
 
         public virtual void Do() { }
+        public virtual void Do(ActionArgs args) { }
     }
 }

@@ -46,5 +46,13 @@ namespace Dungeoneers
                 this.actions[name].Do();
             }
         }
+
+        public void DoAction(string name, ActionArgs arg)
+        {
+            if (this.actions.ContainsKey(name))
+            {
+                this.actions[name].Do(arg);
+            }
+        }
     }
 }

@@ -110,7 +110,6 @@ namespace Dungeoneers.dungeon
             // w d w
             //   x   
             int ret = -1;
-            Console.WriteLine(floor.Length);
             // check for proper walls
             if ((floor[x - 1][y] == 2 || floor[x - 1][y] == 3) && (floor[x + 1][y] == 2 || floor[x + 1][y] == 3))
             {
@@ -165,7 +164,11 @@ namespace Dungeoneers.dungeon
             {
                 for (int y = 0; y < floor[x].Length; y++)
                 {
-                    if (floor[x][y] == 2 && random.Next(100) < 15)
+                    // if a wall surrounded by walls
+                    if (floor[x][y] == 2 &&
+                        (floor[x - 1][y] == 2 || floor[x - 1][y] == 3) &&
+                        (floor[x + 1][y] == 2 || floor[x + 1][y] == 3) && 
+                        random.Next(100) < 15)
                     {
                         // create torch entity
                         Entity wallTorch = new Entity();
