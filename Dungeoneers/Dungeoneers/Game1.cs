@@ -149,6 +149,9 @@ namespace Dungeoneers
 
             if (currentKeyboardState != previousKeyboardState || (currentKeyboardState == previousKeyboardState && keyboardElapsedTime <= 0))
             {
+                int x = (player.GetComponent("Position") as Position).X;
+                int y = (player.GetComponent("Position") as Position).Y;
+
                 if (keyboard.IsKeyDown(Keys.Left))
                 {
                     player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(-1, 0)));

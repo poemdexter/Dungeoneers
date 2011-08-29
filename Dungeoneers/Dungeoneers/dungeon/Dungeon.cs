@@ -10,7 +10,8 @@ namespace Dungeoneers.dungeon
 {
     class Dungeon
     {
-        public int[][] floor { get; set; }
+        public int[][] floor { get; set; } 
+        public int[][] floorObjects { get; set; }
         private Random random { get; set; }
         public List<Entity> torchList;
         public List<Entity> doorList;
@@ -31,9 +32,11 @@ namespace Dungeoneers.dungeon
 
             // initialize size of dungeon array and sets everything to unvisited (0)
             floor = new int[dwidth][];
+            floorObjects = new int[dwidth][];
             for (int a = 0; a < floor.Length; a++)
             {
                 floor[a] = new int[dheight];
+                floorObjects[a] = new int[dheight];
             }
 
             for (int x = 0; x < floor.Length; x++)
@@ -41,6 +44,7 @@ namespace Dungeoneers.dungeon
                 for (int y = 0; y < floor[x].Length; y++)
                 {
                     floor[x][y] = 0;
+                    floorObjects[x][y] = 0;
                 }
             }
 
@@ -78,7 +82,11 @@ namespace Dungeoneers.dungeon
                             door.AddComponent(new Animation(SpriteDict["door_wood_ns"], 2, false, SpriteEffects.None));
                             door.AddAction(new NextFrameOfAnimation());
                             door.AddComponent(new Position(x, y));
+                            door.AddComponent(new Openable());
+                            door.AddAction(new ChangeStateOfOpenable());
                             doorList.Add(door);
+
+                            floorObjects[x][y] = 1;
                         }
                         else if (dir == 2)
                         {
@@ -86,7 +94,11 @@ namespace Dungeoneers.dungeon
                             door.AddComponent(new Animation(SpriteDict["door_wood_we"], 2, false, SpriteEffects.FlipHorizontally));
                             door.AddAction(new NextFrameOfAnimation());
                             door.AddComponent(new Position(x, y));
+                            door.AddComponent(new Openable());
+                            door.AddAction(new ChangeStateOfOpenable());
                             doorList.Add(door);
+
+                            floorObjects[x][y] = 1;
                         }
                         else if (dir == 3)
                         {
@@ -94,9 +106,12 @@ namespace Dungeoneers.dungeon
                             door.AddComponent(new Animation(SpriteDict["door_wood_we"], 2, false, SpriteEffects.None));
                             door.AddAction(new NextFrameOfAnimation());
                             door.AddComponent(new Position(x, y));
+                            door.AddComponent(new Openable());
+                            door.AddAction(new ChangeStateOfOpenable());
                             doorList.Add(door);
-                        }
 
+                            floorObjects[x][y] = 1;
+                        }
                     }
                 }
             }

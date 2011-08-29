@@ -113,8 +113,10 @@
     <Compile Include="entities\action args\ChangeDirectionOfAnimationArgs.cs" />
     <Compile Include="entities\actions\ChangeDirectionOfAnimation.cs" />
     <Compile Include="entities\actions\ChangeDeltaPosition.cs" />
+    <Compile Include="entities\actions\ChangeStateOfOpenable.cs" />
     <Compile Include="entities\actions\NextFrameOfAnimation.cs" />
     <Compile Include="entities\components\Animation.cs" />
+    <Compile Include="entities\components\Openable.cs" />
     <Compile Include="entities\components\Position.cs" />
     <Compile Include="framework\Action.cs" />
     <Compile Include="framework\ActionArgs.cs" />
