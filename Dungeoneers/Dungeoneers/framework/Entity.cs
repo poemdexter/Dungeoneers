@@ -8,7 +8,7 @@ namespace Dungeoneers
 {
     public class Entity
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         private Dictionary<string, Component> components = new Dictionary<string, Component>();
         private Dictionary<string, EntityAction> actions = new Dictionary<string, EntityAction>();

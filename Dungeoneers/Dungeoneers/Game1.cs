@@ -111,31 +111,29 @@ namespace Dungeoneers
 
             drawDungeon(spriteBatch);
 
-            //spriteBatch.Draw(spriteDict["skeleton"], new Vector2(24 + (7 * (scale * 8)), 24 + (3 * (scale * 8))), null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-
-            // draw player
-            int x = ((Position)player.GetComponent("Position")).X;
-            int y = ((Position)player.GetComponent("Position")).Y;
-            Animation animation = (Animation)player.GetComponent("Animation");
-            spriteBatch.Draw(animation.SourceTexture, new Vector2(24 + (x * (scale * 8)), 24 + (y * (scale * 8))), animation.SourceRect, Color.White, 0f, Vector2.Zero, scale, animation.Effects, 0f);
-
             // draw torches
             foreach (Entity torch in dungeon.torchList)
             {
-                x = ((Position)torch.GetComponent("Position")).X;
-                y = ((Position)torch.GetComponent("Position")).Y;
-                animation = (Animation)torch.GetComponent("Animation");
+                int x = ((Position)torch.GetComponent("Position")).X;
+                int y = ((Position)torch.GetComponent("Position")).Y;
+                Animation animation = (Animation)torch.GetComponent("Animation");
                 spriteBatch.Draw(animation.SourceTexture, new Vector2(24 + (x * (scale * 8)), 24 + (y * (scale * 8))), animation.SourceRect, Color.White, 0f, Vector2.Zero, scale, animation.Effects, 0f);
             }
 
             // draw doors
-            foreach (Entity door in dungeon.doorList)
+            foreach (Entity door in dungeon.manager.getDoorList())
             {
-                x = ((Position)door.GetComponent("Position")).X;
-                y = ((Position)door.GetComponent("Position")).Y;
-                animation = (Animation)door.GetComponent("Animation");
+                int x = ((Position)door.GetComponent("Position")).X;
+                int y = ((Position)door.GetComponent("Position")).Y;
+                Animation animation = (Animation)door.GetComponent("Animation");
                 spriteBatch.Draw(animation.SourceTexture, new Vector2(24 + (x * (scale * 8)), 24 + (y * (scale * 8))), animation.SourceRect, Color.White, 0f, Vector2.Zero, scale, animation.Effects, 0f);
             }
+
+            // draw player
+            int px = ((Position)player.GetComponent("Position")).X;
+            int py = ((Position)player.GetComponent("Position")).Y;
+            Animation panimation = (Animation)player.GetComponent("Animation");
+            spriteBatch.Draw(panimation.SourceTexture, new Vector2(24 + (px * (scale * 8)), 24 + (py * (scale * 8))), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
 
             spriteBatch.End();
 
@@ -154,21 +152,90 @@ namespace Dungeoneers
 
                 if (keyboard.IsKeyDown(Keys.Left))
                 {
-                    player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(-1, 0)));
-                    player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
+                    if (dungeon.floorObjects[x - 1][y] == 1)
+                    {
+                        Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y));
+                        if (!(door.GetComponent("Openable") as Openable).Opened)
+                        {
+                            (door.GetComponent("Openable") as Openable).Opened = true;
+                            door.DoAction("NextFrameOfAnimation");
+                        }
+                        else
+                        {
+                            player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(-1, 0)));
+                            player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
+                        }
+                    }
+                    else
+                    {
+                        player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(-1, 0)));
+                        player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
+                    }
                 }
+
                 if (keyboard.IsKeyDown(Keys.Right))
                 {
-                    player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(1, 0)));
-                    player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
+                    if (dungeon.floorObjects[x + 1][y] == 1)
+                    {
+                        Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y));
+                        if (!(door.GetComponent("Openable") as Openable).Opened)
+                        {
+                            (door.GetComponent("Openable") as Openable).Opened = true;
+                            door.DoAction("NextFrameOfAnimation");
+                        }
+                        else
+                        {
+                            player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(1, 0)));
+                            player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
+                        }
+                    }
+                    else
+                    {
+                        player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(1, 0)));
+                        player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
+                    }
                 }
+
                 if (keyboard.IsKeyDown(Keys.Up))
                 {
-                    player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, -1)));
+                    if (dungeon.floorObjects[x][y - 1] == 1)
+                    {
+                        Entity door = dungeon.manager.getDoor(new Vector2(x, y - 1));
+                        if (!(door.GetComponent("Openable") as Openable).Opened)
+                        {
+                            (door.GetComponent("Openable") as Openable).Opened = true;
+                            door.DoAction("NextFrameOfAnimation");
+                        }
+                        else
+                        {
+                            player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, -1)));
+                        }
+                    }
+                    else
+                    {
+                        player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, -1)));
+                    }
                 }
+
                 if (keyboard.IsKeyDown(Keys.Down))
                 {
-                    player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, 1)));
+                    if (dungeon.floorObjects[x][y + 1] == 1)
+                    {
+                        Entity door = dungeon.manager.getDoor(new Vector2(x, y + 1));
+                        if (!(door.GetComponent("Openable") as Openable).Opened)
+                        {
+                            (door.GetComponent("Openable") as Openable).Opened = true;
+                            door.DoAction("NextFrameOfAnimation");
+                        }
+                        else
+                        {
+                            player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, 1)));
+                        }
+                    }
+                    else
+                    {
+                        player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, 1)));
+                    }
                 }
 
                 keyboardElapsedTime = 150;

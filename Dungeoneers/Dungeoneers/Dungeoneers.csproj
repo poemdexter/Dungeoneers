@@ -118,6 +118,7 @@
     <Compile Include="entities\components\Animation.cs" />
     <Compile Include="entities\components\Openable.cs" />
     <Compile Include="entities\components\Position.cs" />
+    <Compile Include="EntityManager.cs" />
     <Compile Include="framework\Action.cs" />
     <Compile Include="framework\ActionArgs.cs" />
     <Compile Include="framework\Component.cs" />

@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Dungeoneers.entities.components;
 using Dungeoneers.entities.actions;
+using Microsoft.Xna.Framework;
 
 namespace Dungeoneers.dungeon
 {
@@ -16,6 +17,8 @@ namespace Dungeoneers.dungeon
         public List<Entity> torchList;
         public List<Entity> doorList;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
+
+        public EntityManager manager;
 
         public Dungeon(int seed, Dictionary<string, Texture2D> spriteDict)
         {
@@ -29,6 +32,8 @@ namespace Dungeoneers.dungeon
             int dheight = 48;
             torchList = new List<Entity>();
             doorList = new List<Entity>();
+
+            manager = new EntityManager();
 
             // initialize size of dungeon array and sets everything to unvisited (0)
             floor = new int[dwidth][];
@@ -84,7 +89,8 @@ namespace Dungeoneers.dungeon
                             door.AddComponent(new Position(x, y));
                             door.AddComponent(new Openable());
                             door.AddAction(new ChangeStateOfOpenable());
-                            doorList.Add(door);
+
+                            manager.addDoor(door, new Vector2(x,y));
 
                             floorObjects[x][y] = 1;
                         }
@@ -96,7 +102,8 @@ namespace Dungeoneers.dungeon
                             door.AddComponent(new Position(x, y));
                             door.AddComponent(new Openable());
                             door.AddAction(new ChangeStateOfOpenable());
-                            doorList.Add(door);
+
+                            manager.addDoor(door, new Vector2(x, y));
 
                             floorObjects[x][y] = 1;
                         }
@@ -108,7 +115,8 @@ namespace Dungeoneers.dungeon
                             door.AddComponent(new Position(x, y));
                             door.AddComponent(new Openable());
                             door.AddAction(new ChangeStateOfOpenable());
-                            doorList.Add(door);
+                            
+                            manager.addDoor(door, new Vector2(x,y));
 
                             floorObjects[x][y] = 1;
                         }
