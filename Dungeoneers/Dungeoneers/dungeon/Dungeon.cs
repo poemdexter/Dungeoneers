@@ -16,11 +16,10 @@ namespace Dungeoneers.dungeon
         private Random random { get; set; }
         public List<Entity> torchList;
         public List<Entity> doorList;
+        public Entity StairsUp;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
         int dwidth = 64;
         int dheight = 48;
-
-        public Vector2 stairsUp { get; set; }
 
         public EntityManager manager;
 
@@ -70,14 +69,16 @@ namespace Dungeoneers.dungeon
             // now add torches
             this.addTorches();
             // now add upstairs;
-            stairsUp = this.addStairs();
+            StairsUp = new Entity();
+            StairsUp.AddComponent(new Animation(SpriteDict["stairs_up"], 1, false, SpriteEffects.None));
+            addStairs();
 
             return floor;
         }
 
         // add stairs up
         // *** stairs up is value 2 in floorObjects array ***
-        public Vector2 addStairs()
+        public void addStairs()
         {
             int x = 1;
             int y = 1;
@@ -89,7 +90,7 @@ namespace Dungeoneers.dungeon
                 if (floor[x][y] == 1)
                 {
                     floorObjects[x][y] = 2;
-                    ret = new Vector2(x, y);
+                    StairsUp.AddComponent(new Position(x, y));
                     found = true;
                 }
                 else if (x < dwidth && x < dheight)
@@ -102,7 +103,6 @@ namespace Dungeoneers.dungeon
                     found = true;
                 }
             }
-            return ret;
         }
 
         // add doors to the rooms

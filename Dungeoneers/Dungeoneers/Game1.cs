@@ -71,7 +71,7 @@ namespace Dungeoneers
 
             // let's add a player
             player = new Entity();
-            player.AddComponent(new Position(dungeon.stairsUp.X, dungeon.stairsUp.Y));
+            player.AddComponent(new Position((dungeon.StairsUp.GetComponent("Position") as Position).X, (dungeon.StairsUp.GetComponent("Position") as Position).Y));
             player.AddComponent(new Animation(spriteDict["bandit"], 1, false, SpriteEffects.None));
             player.AddAction(new ChangeDeltaPosition());
             player.AddAction(new ChangeDirectionOfAnimation());
@@ -130,8 +130,10 @@ namespace Dungeoneers
             }
 
             // draw stairs
-            Vector2 loc = dungeon.stairsUp;
-            spriteBatch.Draw(spriteDict["stairs_up"], new Vector2(24 + (loc.X * (scale * 8)), 24 + (loc.Y * (scale * 8))), spriteDict["stairs_up"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            int sx = (int)((Position)dungeon.StairsUp.GetComponent("Position")).X;
+            int sy = (int)((Position)dungeon.StairsUp.GetComponent("Position")).Y;
+            Animation sanimation = (Animation)dungeon.StairsUp.GetComponent("Animation");
+            spriteBatch.Draw(spriteDict["stairs_up"], new Vector2(24 + (sx * (scale * 8)), 24 + (sy * (scale * 8))), sanimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, sanimation.Effects, 0f);
 
             // draw player
             int px = (int)((Position)player.GetComponent("Position")).X;
@@ -154,7 +156,7 @@ namespace Dungeoneers
                 int x = (int)((Position)player.GetComponent("Position")).X;
                 int y = (int)((Position)player.GetComponent("Position")).Y;
 
-                if (keyboard.IsKeyDown(Keys.Left))
+                if (keyboard.IsKeyDown(Keys.Left) && dungeon.floor[x - 1][y] != 2 && dungeon.floor[x - 1][y] != 3)
                 {
                     if (dungeon.floorObjects[x - 1][y] == 1)
                     {
@@ -177,7 +179,7 @@ namespace Dungeoneers
                     }
                 }
 
-                if (keyboard.IsKeyDown(Keys.Right))
+                if (keyboard.IsKeyDown(Keys.Right) && dungeon.floor[x + 1][y] != 2 && dungeon.floor[x + 1][y] != 3)
                 {
                     if (dungeon.floorObjects[x + 1][y] == 1)
                     {
@@ -200,7 +202,7 @@ namespace Dungeoneers
                     }
                 }
 
-                if (keyboard.IsKeyDown(Keys.Up))
+                if (keyboard.IsKeyDown(Keys.Up) && dungeon.floor[x][y-1] != 2 && dungeon.floor[x][y-1] != 3)
                 {
                     if (dungeon.floorObjects[x][y - 1] == 1)
                     {
@@ -221,7 +223,7 @@ namespace Dungeoneers
                     }
                 }
 
-                if (keyboard.IsKeyDown(Keys.Down))
+                if (keyboard.IsKeyDown(Keys.Down) && dungeon.floor[x - 1][y + 1] != 2 && dungeon.floor[x][y + 1] != 3)
                 {
                     if (dungeon.floorObjects[x][y + 1] == 1)
                     {
