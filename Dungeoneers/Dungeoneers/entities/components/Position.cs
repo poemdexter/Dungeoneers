@@ -8,10 +8,10 @@ namespace Dungeoneers.entities.components
 {
     class Position : Component
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
 
-        public Position(int x, int y)
+        public Position(float x, float y)
         {
             this.Name = "Position";
             this.X = x;

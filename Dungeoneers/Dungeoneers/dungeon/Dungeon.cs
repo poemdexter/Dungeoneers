@@ -11,12 +11,16 @@ namespace Dungeoneers.dungeon
 {
     class Dungeon
     {
-        public int[][] floor { get; set; } 
+        public int[][] floor { get; set; }
         public int[][] floorObjects { get; set; }
         private Random random { get; set; }
         public List<Entity> torchList;
         public List<Entity> doorList;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
+        int dwidth = 64;
+        int dheight = 48;
+
+        public Vector2 stairsUp { get; set; }
 
         public EntityManager manager;
 
@@ -28,8 +32,7 @@ namespace Dungeoneers.dungeon
 
         public int[][] createDungeon()
         {
-            int dwidth = 64;
-            int dheight = 48;
+
             torchList = new List<Entity>();
             doorList = new List<Entity>();
 
@@ -66,11 +69,44 @@ namespace Dungeoneers.dungeon
             this.addDoors();
             // now add torches
             this.addTorches();
+            // now add upstairs;
+            stairsUp = this.addStairs();
 
             return floor;
         }
 
+        // add stairs up
+        // *** stairs up is value 2 in floorObjects array ***
+        public Vector2 addStairs()
+        {
+            int x = 1;
+            int y = 1;
+            bool found = false;
+            Vector2 ret = Vector2.Zero;
+
+            while (!found)
+            {
+                if (floor[x][y] == 1)
+                {
+                    floorObjects[x][y] = 2;
+                    ret = new Vector2(x, y);
+                    found = true;
+                }
+                else if (x < dwidth && x < dheight)
+                {
+                    x++;
+                    y++;
+                }
+                else
+                {
+                    found = true;
+                }
+            }
+            return ret;
+        }
+
         // add doors to the rooms
+        // *** doors are value 1 in floorObjects array ***
         public void addDoors()
         {
             for (int x = 0; x < floor.Length; x++)
@@ -90,7 +126,7 @@ namespace Dungeoneers.dungeon
                             door.AddComponent(new Openable());
                             door.AddAction(new ChangeStateOfOpenable());
 
-                            manager.addDoor(door, new Vector2(x,y));
+                            manager.addDoor(door, new Vector2(x, y));
 
                             floorObjects[x][y] = 1;
                         }
@@ -115,8 +151,8 @@ namespace Dungeoneers.dungeon
                             door.AddComponent(new Position(x, y));
                             door.AddComponent(new Openable());
                             door.AddAction(new ChangeStateOfOpenable());
-                            
-                            manager.addDoor(door, new Vector2(x,y));
+
+                            manager.addDoor(door, new Vector2(x, y));
 
                             floorObjects[x][y] = 1;
                         }
@@ -148,7 +184,7 @@ namespace Dungeoneers.dungeon
                 // check facing south
                 if (y + 2 <= floor[x].Length) // don't check beyond bottom
                 {
-                    if  ((floor[x - 1][y + 1] == 1 && floor[x - 1][y + 2] == 1) || // check diagonal 2
+                    if ((floor[x - 1][y + 1] == 1 && floor[x - 1][y + 2] == 1) || // check diagonal 2
                          (floor[x + 1][y + 1] == 1 && floor[x + 1][y + 2] == 1))   // check other diagonal 2
                     {
                         ret = 1;
@@ -190,7 +226,7 @@ namespace Dungeoneers.dungeon
                     // if a wall surrounded by walls
                     if (floor[x][y] == 2 &&
                         (floor[x - 1][y] == 2 || floor[x - 1][y] == 3) &&
-                        (floor[x + 1][y] == 2 || floor[x + 1][y] == 3) && 
+                        (floor[x + 1][y] == 2 || floor[x + 1][y] == 3) &&
                         random.Next(100) < 15)
                     {
                         // create torch entity

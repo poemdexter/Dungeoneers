@@ -71,7 +71,7 @@ namespace Dungeoneers
 
             // let's add a player
             player = new Entity();
-            player.AddComponent(new Position(10, 5));
+            player.AddComponent(new Position(dungeon.stairsUp.X, dungeon.stairsUp.Y));
             player.AddComponent(new Animation(spriteDict["bandit"], 1, false, SpriteEffects.None));
             player.AddAction(new ChangeDeltaPosition());
             player.AddAction(new ChangeDirectionOfAnimation());
@@ -114,8 +114,8 @@ namespace Dungeoneers
             // draw torches
             foreach (Entity torch in dungeon.torchList)
             {
-                int x = ((Position)torch.GetComponent("Position")).X;
-                int y = ((Position)torch.GetComponent("Position")).Y;
+                int x = (int)((Position)torch.GetComponent("Position")).X;
+                int y = (int)((Position)torch.GetComponent("Position")).Y;
                 Animation animation = (Animation)torch.GetComponent("Animation");
                 spriteBatch.Draw(animation.SourceTexture, new Vector2(24 + (x * (scale * 8)), 24 + (y * (scale * 8))), animation.SourceRect, Color.White, 0f, Vector2.Zero, scale, animation.Effects, 0f);
             }
@@ -123,15 +123,19 @@ namespace Dungeoneers
             // draw doors
             foreach (Entity door in dungeon.manager.getDoorList())
             {
-                int x = ((Position)door.GetComponent("Position")).X;
-                int y = ((Position)door.GetComponent("Position")).Y;
+                int x = (int)((Position)door.GetComponent("Position")).X;
+                int y = (int)((Position)door.GetComponent("Position")).Y;
                 Animation animation = (Animation)door.GetComponent("Animation");
                 spriteBatch.Draw(animation.SourceTexture, new Vector2(24 + (x * (scale * 8)), 24 + (y * (scale * 8))), animation.SourceRect, Color.White, 0f, Vector2.Zero, scale, animation.Effects, 0f);
             }
 
+            // draw stairs
+            Vector2 loc = dungeon.stairsUp;
+            spriteBatch.Draw(spriteDict["stairs_up"], new Vector2(24 + (loc.X * (scale * 8)), 24 + (loc.Y * (scale * 8))), spriteDict["stairs_up"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+
             // draw player
-            int px = ((Position)player.GetComponent("Position")).X;
-            int py = ((Position)player.GetComponent("Position")).Y;
+            int px = (int)((Position)player.GetComponent("Position")).X;
+            int py = (int)((Position)player.GetComponent("Position")).Y;
             Animation panimation = (Animation)player.GetComponent("Animation");
             spriteBatch.Draw(panimation.SourceTexture, new Vector2(24 + (px * (scale * 8)), 24 + (py * (scale * 8))), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
 
@@ -147,8 +151,8 @@ namespace Dungeoneers
 
             if (currentKeyboardState != previousKeyboardState || (currentKeyboardState == previousKeyboardState && keyboardElapsedTime <= 0))
             {
-                int x = (player.GetComponent("Position") as Position).X;
-                int y = (player.GetComponent("Position") as Position).Y;
+                int x = (int)((Position)player.GetComponent("Position")).X;
+                int y = (int)((Position)player.GetComponent("Position")).Y;
 
                 if (keyboard.IsKeyDown(Keys.Left))
                 {
@@ -254,6 +258,8 @@ namespace Dungeoneers
             spriteDict.Add("wall_exposed", Content.Load<Texture2D>("env/wall_exposed"));
             spriteDict.Add("door_wood_ns", Content.Load<Texture2D>("env/door_wood_ns"));
             spriteDict.Add("door_wood_we", Content.Load<Texture2D>("env/door_wood_we"));
+            spriteDict.Add("stairs_up", Content.Load<Texture2D>("env/stairs_up"));
+            spriteDict.Add("stairs_down", Content.Load<Texture2D>("env/stairs_down"));
         }
 
         private void drawDungeon(SpriteBatch batch)
