@@ -55,7 +55,7 @@ namespace Dungeoneers
             loadSpriteDictionary();
 
             int seed = DateTime.Now.Millisecond;
-            //int seed = 420;
+            //int seed = 203;
 
             Console.WriteLine("current seed: " + seed);
 
@@ -150,13 +150,14 @@ namespace Dungeoneers
         public void HandleInput(KeyboardState keyboard, GameTime gameTime)
         {
             keyboardElapsedTime -= gameTime.ElapsedGameTime.Milliseconds;
+            
 
             if (currentKeyboardState != previousKeyboardState || (currentKeyboardState == previousKeyboardState && keyboardElapsedTime <= 0))
             {
                 int x = (int)((Position)player.GetComponent("Position")).X;
                 int y = (int)((Position)player.GetComponent("Position")).Y;
 
-                if (keyboard.IsKeyDown(Keys.Left) && dungeon.floor[x - 1][y] != 2 && dungeon.floor[x - 1][y] != 3)
+                if (keyboard.IsKeyDown(Keys.Left) && dungeon.floor[x - 1][y] == 1)
                 {
                     if (dungeon.floorObjects[x - 1][y] == 1)
                     {
@@ -179,7 +180,10 @@ namespace Dungeoneers
                     }
                 }
 
-                if (keyboard.IsKeyDown(Keys.Right) && dungeon.floor[x + 1][y] != 2 && dungeon.floor[x + 1][y] != 3)
+                x = (int)((Position)player.GetComponent("Position")).X;
+                y = (int)((Position)player.GetComponent("Position")).Y;
+
+                if (keyboard.IsKeyDown(Keys.Right) && dungeon.floor[x + 1][y] == 1)
                 {
                     if (dungeon.floorObjects[x + 1][y] == 1)
                     {
@@ -202,7 +206,10 @@ namespace Dungeoneers
                     }
                 }
 
-                if (keyboard.IsKeyDown(Keys.Up) && dungeon.floor[x][y-1] != 2 && dungeon.floor[x][y-1] != 3)
+                x = (int)((Position)player.GetComponent("Position")).X;
+                y = (int)((Position)player.GetComponent("Position")).Y;
+
+                if (keyboard.IsKeyDown(Keys.Up) && dungeon.floor[x][y - 1] == 1)
                 {
                     if (dungeon.floorObjects[x][y - 1] == 1)
                     {
@@ -223,7 +230,10 @@ namespace Dungeoneers
                     }
                 }
 
-                if (keyboard.IsKeyDown(Keys.Down) && dungeon.floor[x - 1][y + 1] != 2 && dungeon.floor[x][y + 1] != 3)
+                x = (int)((Position)player.GetComponent("Position")).X;
+                y = (int)((Position)player.GetComponent("Position")).Y;
+
+                if (keyboard.IsKeyDown(Keys.Down) && dungeon.floor[x][y + 1] == 1)
                 {
                     if (dungeon.floorObjects[x][y + 1] == 1)
                     {

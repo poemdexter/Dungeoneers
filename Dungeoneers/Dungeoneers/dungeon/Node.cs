@@ -306,7 +306,7 @@ namespace Dungeoneers.dungeon
                     //  |   |   |
                     //  | R |___|X
                     //  |___|
-                    meetX = random.Next(Math.Max(tempR.roomRect.Right + 1, tempL.roomRect.Left - 1), tempL.roomRect.Right);
+                    meetX = random.Next(Math.Max(tempR.roomRect.Right + 1, tempL.roomRect.Left), tempL.roomRect.Right);
                     meetY = random.Next(Math.Max(tempL.roomRect.Bottom + 1, tempR.roomRect.Top + 1), tempR.roomRect.Bottom);
 
                     dungeon[meetX][meetY] = 1;
