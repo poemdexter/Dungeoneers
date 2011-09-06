@@ -26,12 +26,14 @@ namespace Dungeoneers
         KeyboardState previousKeyboardState;
         int keyboardElapsedTime;
 
+        Viewport leftViewport, rightViewport;
+
         Entity player;
 
         private int windowHeight = 720;
         private int windowWidth = 1280;
         private float scale = 4.0f;
-        private float font_scale = 3.0f;
+        private float font_scale = 2.0f;
 
         Dungeon dungeon;
         int torch_elapsedTime, torch_frameTime;
@@ -56,6 +58,10 @@ namespace Dungeoneers
             spriteBatch = new SpriteBatch(GraphicsDevice);
             lofiFont = Content.Load<SpriteFont>("font/lofi_font");
             loadSpriteDictionary();
+
+            leftViewport = new Viewport(0, 0, 960, 720);
+            rightViewport = new Viewport(960, 0, 320, 720);
+
 
             int seed = DateTime.Now.Millisecond;
             //int seed = 203;
@@ -109,8 +115,10 @@ namespace Dungeoneers
         {
             GraphicsDevice.Clear(Color.Black);
 
+            // left side of screen
+            GraphicsDevice.Viewport = leftViewport;
             // Must have SamplerState.PointClamp to scale the textures appropriately. The rest of the fields are default values.
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, getMatrixTranslation());
 
             drawDungeon(spriteBatch);
 
@@ -145,7 +153,23 @@ namespace Dungeoneers
             spriteBatch.Draw(panimation.SourceTexture, new Vector2(24 + (px * (scale * 8)), 24 + (py * (scale * 8))), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
 
             // draw version
-            spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.1a", Vector2.Zero, Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.1a", new Vector2(0, leftViewport.Height - 15), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+
+            spriteBatch.End();
+
+            // right side of screen
+            GraphicsDevice.Viewport = rightViewport;
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+
+            // gui background
+            Texture2D gui = spriteDict["gui_background"];
+            spriteBatch.Draw(gui, Vector2.Zero, gui.Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+
+            // draw ui stuff
+            spriteBatch.DrawString(lofiFont, "poemdexter", new Vector2(24, 24), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "Bandit", new Vector2(24, 44), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "LVL: 1", new Vector2(24, 64), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "EXP: 0", new Vector2(24, 84), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
 
             spriteBatch.End();
             base.Draw(gameTime);
@@ -155,7 +179,7 @@ namespace Dungeoneers
         public void HandleInput(KeyboardState keyboard, GameTime gameTime)
         {
             keyboardElapsedTime -= gameTime.ElapsedGameTime.Milliseconds;
-            
+
 
             if (currentKeyboardState != previousKeyboardState || (currentKeyboardState == previousKeyboardState && keyboardElapsedTime <= 0))
             {
@@ -277,6 +301,7 @@ namespace Dungeoneers
             spriteDict.Add("door_wood_we", Content.Load<Texture2D>("env/door_wood_we"));
             spriteDict.Add("stairs_up", Content.Load<Texture2D>("env/stairs_up"));
             spriteDict.Add("stairs_down", Content.Load<Texture2D>("env/stairs_down"));
+            spriteDict.Add("gui_background", Content.Load<Texture2D>("gui/gui_background"));
         }
 
         private void drawDungeon(SpriteBatch batch)
@@ -295,6 +320,19 @@ namespace Dungeoneers
                     batch.Draw(texture, new Vector2(24 + (x * (scale * texture.Width)), 24 + (y * (scale * texture.Height))), null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
                 }
             }
+        }
+
+        private Matrix getMatrixTranslation()
+        {
+            Matrix trans;
+
+            Vector3 playerV = new Vector3(((Position)player.GetComponent("Position")).X - 13.75f, ((Position)player.GetComponent("Position")).Y - 10f, 0);
+            //Vector3 viewV = new Vector3((float)(.5 * leftViewport.Width), (float)(.5 * leftViewport.Height), 0);
+            Vector3 viewV = new Vector3(scale * ((Animation)dungeon.StairsUp.GetComponent("Animation")).FrameHeight, scale * ((Animation)dungeon.StairsUp.GetComponent("Animation")).FrameHeight, 0);
+            
+            trans = Matrix.CreateTranslation(playerV * -viewV);
+
+            return trans;
         }
     }
 }
