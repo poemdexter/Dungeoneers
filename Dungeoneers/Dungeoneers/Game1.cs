@@ -19,6 +19,7 @@ namespace Dungeoneers
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteFont lofiFont;
 
         // Keyboard states used to determine key presses
         KeyboardState currentKeyboardState;
@@ -30,6 +31,7 @@ namespace Dungeoneers
         private int windowHeight = 720;
         private int windowWidth = 1280;
         private float scale = 4.0f;
+        private float font_scale = 3.0f;
 
         Dungeon dungeon;
         int torch_elapsedTime, torch_frameTime;
@@ -52,6 +54,7 @@ namespace Dungeoneers
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            lofiFont = Content.Load<SpriteFont>("font/lofi_font");
             loadSpriteDictionary();
 
             int seed = DateTime.Now.Millisecond;
@@ -141,8 +144,10 @@ namespace Dungeoneers
             Animation panimation = (Animation)player.GetComponent("Animation");
             spriteBatch.Draw(panimation.SourceTexture, new Vector2(24 + (px * (scale * 8)), 24 + (py * (scale * 8))), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
 
-            spriteBatch.End();
+            // draw version
+            spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.1a", Vector2.Zero, Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
 
+            spriteBatch.End();
             base.Draw(gameTime);
         }
 
