@@ -128,7 +128,7 @@ namespace Dungeoneers
                 int x = (int)((Position)torch.GetComponent("Position")).X;
                 int y = (int)((Position)torch.GetComponent("Position")).Y;
                 Animation animation = (Animation)torch.GetComponent("Animation");
-                spriteBatch.Draw(animation.SourceTexture, new Vector2(24 + (x * (scale * 8)), 24 + (y * (scale * 8))), animation.SourceRect, Color.White, 0f, Vector2.Zero, scale, animation.Effects, 0f);
+                spriteBatch.Draw(animation.SourceTexture, new Vector2(x * (scale * 8), y * (scale * 8)), animation.SourceRect, Color.White, 0f, Vector2.Zero, scale, animation.Effects, 0f);
             }
 
             // draw doors
@@ -137,24 +137,26 @@ namespace Dungeoneers
                 int x = (int)((Position)door.GetComponent("Position")).X;
                 int y = (int)((Position)door.GetComponent("Position")).Y;
                 Animation animation = (Animation)door.GetComponent("Animation");
-                spriteBatch.Draw(animation.SourceTexture, new Vector2(24 + (x * (scale * 8)), 24 + (y * (scale * 8))), animation.SourceRect, Color.White, 0f, Vector2.Zero, scale, animation.Effects, 0f);
+                spriteBatch.Draw(animation.SourceTexture, new Vector2(x * (scale * 8), y * (scale * 8)), animation.SourceRect, Color.White, 0f, Vector2.Zero, scale, animation.Effects, 0f);
             }
 
             // draw stairs
             int sx = (int)((Position)dungeon.StairsUp.GetComponent("Position")).X;
             int sy = (int)((Position)dungeon.StairsUp.GetComponent("Position")).Y;
             Animation sanimation = (Animation)dungeon.StairsUp.GetComponent("Animation");
-            spriteBatch.Draw(spriteDict["stairs_up"], new Vector2(24 + (sx * (scale * 8)), 24 + (sy * (scale * 8))), sanimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, sanimation.Effects, 0f);
+            spriteBatch.Draw(spriteDict["stairs_up"], new Vector2(sx * (scale * 8), sy * (scale * 8)), sanimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, sanimation.Effects, 0f);
 
             // draw player
             int px = (int)((Position)player.GetComponent("Position")).X;
             int py = (int)((Position)player.GetComponent("Position")).Y;
             Animation panimation = (Animation)player.GetComponent("Animation");
-            spriteBatch.Draw(panimation.SourceTexture, new Vector2(24 + (px * (scale * 8)), 24 + (py * (scale * 8))), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
+            spriteBatch.Draw(panimation.SourceTexture, new Vector2(px * (scale * 8), py * (scale * 8)), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
+
+            spriteBatch.End();
 
             // draw version
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
             spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.1a", new Vector2(0, leftViewport.Height - 15), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-
             spriteBatch.End();
 
             // right side of screen
@@ -317,7 +319,7 @@ namespace Dungeoneers
                     else if (floor[x][y] == 3) texture = spriteDict["wall_side_bot"];
                     else continue;
 
-                    batch.Draw(texture, new Vector2(24 + (x * (scale * texture.Width)), 24 + (y * (scale * texture.Height))), null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                    batch.Draw(texture, new Vector2(x * (scale * texture.Width), y * (scale * texture.Height)), null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
                 }
             }
         }
@@ -326,10 +328,10 @@ namespace Dungeoneers
         {
             Matrix trans;
 
-            Vector3 playerV = new Vector3(((Position)player.GetComponent("Position")).X - 13.75f, ((Position)player.GetComponent("Position")).Y - 10f, 0);
-            //Vector3 viewV = new Vector3((float)(.5 * leftViewport.Width), (float)(.5 * leftViewport.Height), 0);
+            // X - ( viewport width / (frameheight * scale) ) / 2 ish
+            Vector3 playerV = new Vector3(((Position)player.GetComponent("Position")).X - 14.5f, ((Position)player.GetComponent("Position")).Y - 11f, 0);
             Vector3 viewV = new Vector3(scale * ((Animation)dungeon.StairsUp.GetComponent("Animation")).FrameHeight, scale * ((Animation)dungeon.StairsUp.GetComponent("Animation")).FrameHeight, 0);
-            
+
             trans = Matrix.CreateTranslation(playerV * -viewV);
 
             return trans;
