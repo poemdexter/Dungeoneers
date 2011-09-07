@@ -183,7 +183,8 @@ namespace Dungeoneers
             keyboardElapsedTime -= gameTime.ElapsedGameTime.Milliseconds;
 
 
-            if (currentKeyboardState != previousKeyboardState || (currentKeyboardState == previousKeyboardState && keyboardElapsedTime <= 0))
+            //if (currentKeyboardState != previousKeyboardState || (currentKeyboardState == previousKeyboardState && keyboardElapsedTime <= 0))
+            if (keyboardElapsedTime <= 0)
             {
                 int x = (int)((Position)player.GetComponent("Position")).X;
                 int y = (int)((Position)player.GetComponent("Position")).Y;
@@ -209,12 +210,9 @@ namespace Dungeoneers
                         player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(-1, 0)));
                         player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
                     }
+                    keyboardElapsedTime = 150;
                 }
-
-                x = (int)((Position)player.GetComponent("Position")).X;
-                y = (int)((Position)player.GetComponent("Position")).Y;
-
-                if (keyboard.IsKeyDown(Keys.Right) && dungeon.floor[x + 1][y] == 1)
+                else if (keyboard.IsKeyDown(Keys.Right) && dungeon.floor[x + 1][y] == 1)
                 {
                     if (dungeon.floorObjects[x + 1][y] == 1)
                     {
@@ -235,12 +233,9 @@ namespace Dungeoneers
                         player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(1, 0)));
                         player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
                     }
+                    keyboardElapsedTime = 150;
                 }
-
-                x = (int)((Position)player.GetComponent("Position")).X;
-                y = (int)((Position)player.GetComponent("Position")).Y;
-
-                if (keyboard.IsKeyDown(Keys.Up) && dungeon.floor[x][y - 1] == 1)
+                else if (keyboard.IsKeyDown(Keys.Up) && dungeon.floor[x][y - 1] == 1)
                 {
                     if (dungeon.floorObjects[x][y - 1] == 1)
                     {
@@ -259,12 +254,9 @@ namespace Dungeoneers
                     {
                         player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, -1)));
                     }
+                    keyboardElapsedTime = 150;
                 }
-
-                x = (int)((Position)player.GetComponent("Position")).X;
-                y = (int)((Position)player.GetComponent("Position")).Y;
-
-                if (keyboard.IsKeyDown(Keys.Down) && dungeon.floor[x][y + 1] == 1)
+                else if (keyboard.IsKeyDown(Keys.Down) && dungeon.floor[x][y + 1] == 1)
                 {
                     if (dungeon.floorObjects[x][y + 1] == 1)
                     {
@@ -283,9 +275,9 @@ namespace Dungeoneers
                     {
                         player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, 1)));
                     }
+                    keyboardElapsedTime = 150;
                 }
 
-                keyboardElapsedTime = 150;
             }
         }
 
