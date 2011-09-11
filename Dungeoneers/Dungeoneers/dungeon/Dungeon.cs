@@ -15,9 +15,8 @@ namespace Dungeoneers.dungeon
         public int[][] floorObjects { get; set; }
         private Random random { get; set; }
         public List<Entity> torchList;
-        public List<Entity> doorList;
         public List<Rectangle> roomList;
-        public Entity StairsUp, StairsDown;
+        public Entity StairsUp, StairsDown, player;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
         int dwidth = 64;
         int dheight = 48;
@@ -34,7 +33,6 @@ namespace Dungeoneers.dungeon
         {
 
             torchList = new List<Entity>();
-            doorList = new List<Entity>();
             roomList = new List<Rectangle>();
 
             manager = new EntityManager();
@@ -76,9 +74,13 @@ namespace Dungeoneers.dungeon
             return floor;
         }
 
-        public void addPlayer()
+        public void addPlayer(Texture2D sprite)
         {
- 
+            player = new Entity();
+            player.AddComponent(new Position((StairsUp.GetComponent("Position") as Position).X, (StairsUp.GetComponent("Position") as Position).Y));
+            player.AddComponent(new Animation(sprite, 1, false, SpriteEffects.None));
+            player.AddAction(new ChangeDeltaPosition());
+            player.AddAction(new ChangeDirectionOfAnimation());
         }
 
         // add stairs up

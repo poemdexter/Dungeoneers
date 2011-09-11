@@ -9,7 +9,6 @@ namespace Dungeoneers
     public class EntityManager
     {
         private Dictionary<Vector2, Entity> doorDict;
-        public Entity player;
 
         public EntityManager()
         {
