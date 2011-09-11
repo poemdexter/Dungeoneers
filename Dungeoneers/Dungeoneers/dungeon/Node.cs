@@ -15,6 +15,7 @@ namespace Dungeoneers.dungeon
 
         private int splitPos; // left (x) top (y) corner
         private Node leftChild, rightChild;
+        private List<Rectangle> leftR, rightR;
         private Random random;
         private string split_dir;
         private Rectangle Rect, roomRect;
@@ -86,15 +87,20 @@ namespace Dungeoneers.dungeon
             }
         }
 
-        public void addRooms(int[][] dungeon)
+        public List<Rectangle> addRooms(int[][] dungeon)
         {
+            leftR = new List<Rectangle>();
+            rightR = new List<Rectangle>();
+
             // recurse down to leaf nodes
             if (leftChild != null || rightChild != null)
             {
                 if (leftChild != null)
-                    leftChild.addRooms(dungeon);
+                    leftR = leftChild.addRooms(dungeon);
                 if (rightChild != null)
-                    rightChild.addRooms(dungeon);
+                    rightR = rightChild.addRooms(dungeon);
+
+                return new List<Rectangle>(leftR.Concat(rightR));
             }
             else // hit a leaf, make a room
             {
@@ -106,6 +112,9 @@ namespace Dungeoneers.dungeon
                 roomRect = new Rectangle(roomLeft, roomTop, roomWidth, roomHeight);
                 roomBuilt = true;
                 paintRoom(roomRect, dungeon);
+
+                leftR.Add(roomRect);
+                return leftR;
             }
         }
 

@@ -28,12 +28,14 @@ namespace Dungeoneers
 
         Viewport leftViewport, rightViewport;
 
-        Entity player;
+        Entity player, enemy;
 
         private int windowHeight = 720;
         private int windowWidth = 1280;
         private float scale = 4.0f;
         private float font_scale = 2.0f;
+
+        private bool playerActed;
 
         Dungeon dungeon;
         int torch_elapsedTime, torch_frameTime;
@@ -71,6 +73,8 @@ namespace Dungeoneers
             dungeon = new Dungeon(seed, spriteDict);
             dungeon.createDungeon();
 
+            dungeon.addPlayer();
+
             // set keyboard elapsed time to 0 so we're ready
             keyboardElapsedTime = 0;
 
@@ -84,6 +88,8 @@ namespace Dungeoneers
             player.AddComponent(new Animation(spriteDict["bandit"], 1, false, SpriteEffects.None));
             player.AddAction(new ChangeDeltaPosition());
             player.AddAction(new ChangeDirectionOfAnimation());
+
+            
 
         }
 
@@ -104,11 +110,23 @@ namespace Dungeoneers
                 }
             }
 
+            // player can act
+            playerActed = false;
             previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
             HandleInput(currentKeyboardState, gameTime);
 
+            if (playerActed)
+            {
+                nextGameStateChange();
+            }
+
             base.Update(gameTime);
+        }
+
+        public void nextGameStateChange()
+        {
+            
         }
 
         protected override void Draw(GameTime gameTime)
@@ -177,13 +195,10 @@ namespace Dungeoneers
             base.Draw(gameTime);
         }
 
-        // todo, add player entity and movement
         public void HandleInput(KeyboardState keyboard, GameTime gameTime)
         {
             keyboardElapsedTime -= gameTime.ElapsedGameTime.Milliseconds;
 
-
-            //if (currentKeyboardState != previousKeyboardState || (currentKeyboardState == previousKeyboardState && keyboardElapsedTime <= 0))
             if (keyboardElapsedTime <= 0)
             {
                 int x = (int)((Position)player.GetComponent("Position")).X;
@@ -211,6 +226,7 @@ namespace Dungeoneers
                         player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
                     }
                     keyboardElapsedTime = 150;
+                    playerActed = true;
                 }
                 else if (keyboard.IsKeyDown(Keys.Right) && dungeon.floor[x + 1][y] == 1)
                 {
@@ -234,6 +250,7 @@ namespace Dungeoneers
                         player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
                     }
                     keyboardElapsedTime = 150;
+                    playerActed = true;
                 }
                 else if (keyboard.IsKeyDown(Keys.Up) && dungeon.floor[x][y - 1] == 1)
                 {
@@ -255,6 +272,7 @@ namespace Dungeoneers
                         player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, -1)));
                     }
                     keyboardElapsedTime = 150;
+                    playerActed = true;
                 }
                 else if (keyboard.IsKeyDown(Keys.Down) && dungeon.floor[x][y + 1] == 1)
                 {
@@ -276,8 +294,8 @@ namespace Dungeoneers
                         player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, 1)));
                     }
                     keyboardElapsedTime = 150;
+                    playerActed = true;
                 }
-
             }
         }
 
@@ -296,6 +314,7 @@ namespace Dungeoneers
             spriteDict.Add("stairs_up", Content.Load<Texture2D>("env/stairs_up"));
             spriteDict.Add("stairs_down", Content.Load<Texture2D>("env/stairs_down"));
             spriteDict.Add("gui_background", Content.Load<Texture2D>("gui/gui_background"));
+            spriteDict.Add("shrub", Content.Load<Texture2D>("env/shrub"));
         }
 
         private void drawDungeon(SpriteBatch batch)
@@ -309,6 +328,7 @@ namespace Dungeoneers
                     if (floor[x][y] == 1) texture = spriteDict["floor_norm"];
                     else if (floor[x][y] == 2) texture = spriteDict["wall_exposed"];
                     else if (floor[x][y] == 3) texture = spriteDict["wall_side_bot"];
+                    // else if (floor[x][y] == 0) texture = spriteDict["shrub"];
                     else continue;
 
                     batch.Draw(texture, new Vector2(x * (scale * texture.Width), y * (scale * texture.Height)), null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);

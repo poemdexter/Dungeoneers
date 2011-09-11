@@ -16,6 +16,7 @@ namespace Dungeoneers.dungeon
         private Random random { get; set; }
         public List<Entity> torchList;
         public List<Entity> doorList;
+        public List<Rectangle> roomList;
         public Entity StairsUp;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
         int dwidth = 64;
@@ -34,6 +35,7 @@ namespace Dungeoneers.dungeon
 
             torchList = new List<Entity>();
             doorList = new List<Entity>();
+            roomList = new List<Rectangle>();
 
             manager = new EntityManager();
 
@@ -59,7 +61,7 @@ namespace Dungeoneers.dungeon
             Node wholeDungeon = new Node(1, 1, dwidth - 2, dheight - 2, random);
             wholeDungeon.split(floor);
             // now add rooms
-            wholeDungeon.addRooms(floor);
+            roomList = wholeDungeon.addRooms(floor);
             // now connect the rooms
             wholeDungeon.connectRooms(floor);
             // now draw walls
@@ -69,17 +71,23 @@ namespace Dungeoneers.dungeon
             // now add torches
             this.addTorches();
             // now add upstairs;
-            StairsUp = new Entity();
-            StairsUp.AddComponent(new Animation(SpriteDict["stairs_up"], 1, false, SpriteEffects.None));
             addStairs();
 
             return floor;
+        }
+
+        public void addPlayer()
+        {
+ 
         }
 
         // add stairs up
         // *** stairs up is value 2 in floorObjects array ***
         public void addStairs()
         {
+            StairsUp = new Entity();
+            StairsUp.AddComponent(new Animation(SpriteDict["stairs_up"], 1, false, SpriteEffects.None));
+
             int x = 1;
             int y = 1;
             bool found = false;
