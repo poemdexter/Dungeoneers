@@ -164,6 +164,12 @@ namespace Dungeoneers
             Animation sanimation = (Animation)dungeon.StairsUp.GetComponent("Animation");
             spriteBatch.Draw(spriteDict["stairs_up"], new Vector2(sx * (scale * 8), sy * (scale * 8)), sanimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, sanimation.Effects, 0f);
 
+            // draw stairs
+            sx = (int)((Position)dungeon.StairsDown.GetComponent("Position")).X;
+            sy = (int)((Position)dungeon.StairsDown.GetComponent("Position")).Y;
+            sanimation = (Animation)dungeon.StairsDown.GetComponent("Animation");
+            spriteBatch.Draw(spriteDict["stairs_down"], new Vector2(sx * (scale * 8), sy * (scale * 8)), sanimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, sanimation.Effects, 0f);
+
             // draw player
             int px = (int)((Position)player.GetComponent("Position")).X;
             int py = (int)((Position)player.GetComponent("Position")).Y;

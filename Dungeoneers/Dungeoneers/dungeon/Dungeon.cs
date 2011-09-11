@@ -17,7 +17,7 @@ namespace Dungeoneers.dungeon
         public List<Entity> torchList;
         public List<Entity> doorList;
         public List<Rectangle> roomList;
-        public Entity StairsUp;
+        public Entity StairsUp, StairsDown;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
         int dwidth = 64;
         int dheight = 48;
@@ -87,30 +87,17 @@ namespace Dungeoneers.dungeon
         {
             StairsUp = new Entity();
             StairsUp.AddComponent(new Animation(SpriteDict["stairs_up"], 1, false, SpriteEffects.None));
+            Rectangle room = roomList[random.Next(0, roomList.Count)];
+            int x = random.Next(room.Left, room.Right + 1);
+            int y = random.Next(room.Top, room.Bottom + 1);
+            StairsUp.AddComponent(new Position(x, y));
 
-            int x = 1;
-            int y = 1;
-            bool found = false;
-            Vector2 ret = Vector2.Zero;
-
-            while (!found)
-            {
-                if (floor[x][y] == 1)
-                {
-                    floorObjects[x][y] = 2;
-                    StairsUp.AddComponent(new Position(x, y));
-                    found = true;
-                }
-                else if (x < dwidth && x < dheight)
-                {
-                    x++;
-                    y++;
-                }
-                else
-                {
-                    found = true;
-                }
-            }
+            StairsDown = new Entity();
+            StairsDown.AddComponent(new Animation(SpriteDict["stairs_down"], 1, false, SpriteEffects.None));
+            Rectangle room1 = roomList[random.Next(0, roomList.Count)];
+            int x1 = random.Next(room1.Left, room1.Right + 1);
+            int y1 = random.Next(room1.Top, room1.Bottom + 1);
+            StairsDown.AddComponent(new Position(x1, y1));
         }
 
         // add doors to the rooms
