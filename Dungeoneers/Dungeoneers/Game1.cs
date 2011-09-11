@@ -70,7 +70,7 @@ namespace Dungeoneers
 
             dungeon = new Dungeon(seed, spriteDict);
             dungeon.createDungeon();
-            dungeon.addPlayer(spriteDict["bandit"]);
+            dungeon.addPlayer();
 
             // set keyboard elapsed time to 0 so we're ready
             keyboardElapsedTime = 0;
@@ -105,6 +105,7 @@ namespace Dungeoneers
 
             if (playerActed)
             {
+                // let the rest of the mobs act
                 nextGameStateChange();
             }
 
@@ -113,7 +114,11 @@ namespace Dungeoneers
 
         public void nextGameStateChange()
         {
-            
+            // player moved, so now it's mob's turn
+            dungeon.skeleton.DoAction("MoveTowardsPlayer", 
+                new MoveTowardsPlayerArgs(((Position)dungeon.player.GetComponent("Position")).X,
+                                          ((Position)dungeon.player.GetComponent("Position")).Y, 
+                                          dungeon.floor));
         }
 
         protected override void Draw(GameTime gameTime)
@@ -162,6 +167,12 @@ namespace Dungeoneers
             int py = (int)((Position)dungeon.player.GetComponent("Position")).Y;
             Animation panimation = (Animation)dungeon.player.GetComponent("Animation");
             spriteBatch.Draw(panimation.SourceTexture, new Vector2(px * (scale * 8), py * (scale * 8)), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
+
+            // draw mobs
+            int mx = (int)((Position)dungeon.skeleton.GetComponent("Position")).X;
+            int my = (int)((Position)dungeon.skeleton.GetComponent("Position")).Y;
+            Animation manimation = (Animation)dungeon.skeleton.GetComponent("Animation");
+            spriteBatch.Draw(manimation.SourceTexture, new Vector2(mx * (scale * 8), my * (scale * 8)), manimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, manimation.Effects, 0f);
 
             spriteBatch.End();
 

@@ -107,13 +107,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="dungeon\AIPoint.cs" />
     <Compile Include="dungeon\Dungeon.cs" />
     <Compile Include="dungeon\Node.cs" />
     <Compile Include="entities\action args\ChangeDeltaPositionArgs.cs" />
     <Compile Include="entities\action args\ChangeDirectionOfAnimationArgs.cs" />
+    <Compile Include="entities\action args\MoveTowardsPlayerArgs.cs" />
     <Compile Include="entities\actions\ChangeDirectionOfAnimation.cs" />
     <Compile Include="entities\actions\ChangeDeltaPosition.cs" />
     <Compile Include="entities\actions\ChangeStateOfOpenable.cs" />
+    <Compile Include="entities\actions\MoveTowardsPlayer.cs" />
     <Compile Include="entities\actions\NextFrameOfAnimation.cs" />
     <Compile Include="entities\components\Animation.cs" />
     <Compile Include="entities\components\Openable.cs" />

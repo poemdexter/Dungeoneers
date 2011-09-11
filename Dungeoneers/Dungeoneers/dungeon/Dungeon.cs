@@ -16,7 +16,7 @@ namespace Dungeoneers.dungeon
         private Random random { get; set; }
         public List<Entity> torchList;
         public List<Rectangle> roomList;
-        public Entity StairsUp, StairsDown, player;
+        public Entity StairsUp, StairsDown, player, skeleton;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
         int dwidth = 64;
         int dheight = 48;
@@ -63,22 +63,36 @@ namespace Dungeoneers.dungeon
             // now connect the rooms
             wholeDungeon.connectRooms(floor);
             // now draw walls
-            this.paintWalls();
+            paintWalls();
             // now add doors
-            this.addDoors();
+            addDoors();
             // now add torches
-            this.addTorches();
-            // now add upstairs;
+            addTorches();
+            // now add stairs up and down
             addStairs();
+            // add mobs
+            addMobs();
 
             return floor;
         }
 
-        public void addPlayer(Texture2D sprite)
+        public void addMobs()
+        {
+            skeleton = new Entity();
+            skeleton.AddComponent(new Animation(SpriteDict["skeleton"], 1, false, SpriteEffects.None));
+            Rectangle room = roomList[random.Next(0, roomList.Count)];
+            int x = random.Next(room.Left, room.Right);
+            int y = random.Next(room.Top, room.Bottom);
+            skeleton.AddComponent(new Position(x, y));
+            skeleton.AddAction(new ChangeDeltaPosition());
+            skeleton.AddAction(new ChangeDirectionOfAnimation());
+        }
+
+        public void addPlayer()
         {
             player = new Entity();
             player.AddComponent(new Position((StairsUp.GetComponent("Position") as Position).X, (StairsUp.GetComponent("Position") as Position).Y));
-            player.AddComponent(new Animation(sprite, 1, false, SpriteEffects.None));
+            player.AddComponent(new Animation(SpriteDict["bandit"], 1, false, SpriteEffects.None));
             player.AddAction(new ChangeDeltaPosition());
             player.AddAction(new ChangeDirectionOfAnimation());
         }
@@ -90,15 +104,15 @@ namespace Dungeoneers.dungeon
             StairsUp = new Entity();
             StairsUp.AddComponent(new Animation(SpriteDict["stairs_up"], 1, false, SpriteEffects.None));
             Rectangle room = roomList[random.Next(0, roomList.Count)];
-            int x = random.Next(room.Left, room.Right + 1);
-            int y = random.Next(room.Top, room.Bottom + 1);
+            int x = random.Next(room.Left, room.Right);
+            int y = random.Next(room.Top, room.Bottom);
             StairsUp.AddComponent(new Position(x, y));
 
             StairsDown = new Entity();
             StairsDown.AddComponent(new Animation(SpriteDict["stairs_down"], 1, false, SpriteEffects.None));
             Rectangle room1 = roomList[random.Next(0, roomList.Count)];
-            int x1 = random.Next(room1.Left, room1.Right + 1);
-            int y1 = random.Next(room1.Top, room1.Bottom + 1);
+            int x1 = random.Next(room1.Left, room1.Right);
+            int y1 = random.Next(room1.Top, room1.Bottom);
             StairsDown.AddComponent(new Position(x1, y1));
         }
 
