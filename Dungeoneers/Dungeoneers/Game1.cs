@@ -210,7 +210,7 @@ namespace Dungeoneers
 
                 if (keyboard.IsKeyDown(Keys.Left) && dungeon.floor[x - 1][y] == 1)
                 {
-                    if (dungeon.floorObjects[x - 1][y] == 1)
+                    if (dungeon.manager.getDoor(new Vector2(x - 1, y)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y));
                         if (!(door.GetComponent("Openable") as Openable).Opened)
@@ -234,7 +234,7 @@ namespace Dungeoneers
                 }
                 else if (keyboard.IsKeyDown(Keys.Right) && dungeon.floor[x + 1][y] == 1)
                 {
-                    if (dungeon.floorObjects[x + 1][y] == 1)
+                    if (dungeon.manager.getDoor(new Vector2(x + 1, y)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y));
                         if (!(door.GetComponent("Openable") as Openable).Opened)
@@ -258,7 +258,7 @@ namespace Dungeoneers
                 }
                 else if (keyboard.IsKeyDown(Keys.Up) && dungeon.floor[x][y - 1] == 1)
                 {
-                    if (dungeon.floorObjects[x][y - 1] == 1)
+                    if (dungeon.manager.getDoor(new Vector2(x, y - 1)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x, y - 1));
                         if (!(door.GetComponent("Openable") as Openable).Opened)
@@ -280,7 +280,7 @@ namespace Dungeoneers
                 }
                 else if (keyboard.IsKeyDown(Keys.Down) && dungeon.floor[x][y + 1] == 1)
                 {
-                    if (dungeon.floorObjects[x][y + 1] == 1)
+                    if (dungeon.manager.getDoor(new Vector2(x, y + 1)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x, y + 1));
                         if (!(door.GetComponent("Openable") as Openable).Opened)

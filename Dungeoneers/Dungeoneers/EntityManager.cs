@@ -13,7 +13,6 @@ namespace Dungeoneers
         public EntityManager()
         {
             doorDict = new Dictionary<Vector2, Entity>();
-
         }
 
         public void addDoor(Entity door, Vector2 position)
@@ -23,7 +22,18 @@ namespace Dungeoneers
 
         public Entity getDoor(Vector2 position)
         {
-            return doorDict[position];
+            if (doorDict.ContainsKey(position))
+                return doorDict[position];
+            else 
+                return null;
+        }
+
+        public bool isDoorAt(Vector2 position)
+        {
+            if (doorDict.ContainsKey(position))
+                return true;
+            else
+                return false;
         }
 
         public List<Entity> getDoorList()

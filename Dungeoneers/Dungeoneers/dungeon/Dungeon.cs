@@ -12,7 +12,6 @@ namespace Dungeoneers.dungeon
     class Dungeon
     {
         public int[][] floor { get; set; }
-        public int[][] floorObjects { get; set; }
         private Random random { get; set; }
         public List<Entity> torchList;
         public List<Rectangle> roomList;
@@ -31,19 +30,15 @@ namespace Dungeoneers.dungeon
 
         public int[][] createDungeon()
         {
-
             torchList = new List<Entity>();
             roomList = new List<Rectangle>();
-
             manager = new EntityManager();
 
             // initialize size of dungeon array and sets everything to unvisited (0)
             floor = new int[dwidth][];
-            floorObjects = new int[dwidth][];
             for (int a = 0; a < floor.Length; a++)
             {
                 floor[a] = new int[dheight];
-                floorObjects[a] = new int[dheight];
             }
 
             for (int x = 0; x < floor.Length; x++)
@@ -51,7 +46,6 @@ namespace Dungeoneers.dungeon
                 for (int y = 0; y < floor[x].Length; y++)
                 {
                     floor[x][y] = 0;
-                    floorObjects[x][y] = 0;
                 }
             }
 
@@ -98,7 +92,6 @@ namespace Dungeoneers.dungeon
         }
 
         // add stairs up
-        // *** stairs up is value 2 in floorObjects array ***
         public void addStairs()
         {
             StairsUp = new Entity();
@@ -117,7 +110,6 @@ namespace Dungeoneers.dungeon
         }
 
         // add doors to the rooms
-        // *** doors are value 1 in floorObjects array ***
         public void addDoors()
         {
             for (int x = 0; x < floor.Length; x++)
@@ -138,8 +130,6 @@ namespace Dungeoneers.dungeon
                             door.AddAction(new ChangeStateOfOpenable());
 
                             manager.addDoor(door, new Vector2(x, y));
-
-                            floorObjects[x][y] = 1;
                         }
                         else if (dir == 2)
                         {
@@ -151,8 +141,6 @@ namespace Dungeoneers.dungeon
                             door.AddAction(new ChangeStateOfOpenable());
 
                             manager.addDoor(door, new Vector2(x, y));
-
-                            floorObjects[x][y] = 1;
                         }
                         else if (dir == 3)
                         {
@@ -164,8 +152,6 @@ namespace Dungeoneers.dungeon
                             door.AddAction(new ChangeStateOfOpenable());
 
                             manager.addDoor(door, new Vector2(x, y));
-
-                            floorObjects[x][y] = 1;
                         }
                     }
                 }
