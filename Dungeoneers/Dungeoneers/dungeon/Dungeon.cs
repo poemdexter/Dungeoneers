@@ -80,6 +80,7 @@ namespace Dungeoneers.dungeon
             skeleton.AddComponent(new Position(x, y));
             skeleton.AddAction(new ChangeDeltaPosition());
             skeleton.AddAction(new ChangeDirectionOfAnimation());
+            skeleton.AddAction(new MoveTowardsPlayer());
         }
 
         public void addPlayer()
