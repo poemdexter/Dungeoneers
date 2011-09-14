@@ -26,12 +26,16 @@ namespace Dungeoneers.entities.actions
 
                 if (position != null)
                 {
-                    getPathToPlayer(position, arguments);
+                    Vector2 next = getNextPointToPlayer(position, arguments);
+                    if (next != Vector2.Zero)
+                    {
+                        this.Entity.DoAction("ChangeAbsPosition", new ChangePositionArgs(next));
+                    }
                 }
             }
         }
 
-        public void getPathToPlayer(Position pos, MoveTowardsPlayerArgs args)
+        public Vector2 getNextPointToPlayer(Position pos, MoveTowardsPlayerArgs args)
         {
             // gotta get A* path to player if possible
             // http://www.policyalmanac.org/games/aStarTutorial.htm
@@ -43,7 +47,7 @@ namespace Dungeoneers.entities.actions
             // 1
             AIPoint startPoint = new AIPoint(new Vector2(pos.X, pos.Y), new Vector2(pos.X, pos.Y), 0, 0);
             openList.Add(startPoint);
-            
+
             Vector2 player = new Vector2(args.PlayerX, args.PlayerY);
             bool found = false;
 
@@ -74,9 +78,9 @@ namespace Dungeoneers.entities.actions
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, 10, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10, getG(tempV, player)));
                         }
-                        else 
+                        else
                         {
                             AIPoint pathCheckPoint = getAIPoint(tempV, openList);
                             if (pathCheckPoint.G > parentAI.G + 10)
@@ -94,7 +98,7 @@ namespace Dungeoneers.entities.actions
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, 14, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14, getG(tempV, player)));
                         }
                         else
                         {
@@ -114,7 +118,7 @@ namespace Dungeoneers.entities.actions
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, 10, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10, getG(tempV, player)));
                         }
                         else
                         {
@@ -134,7 +138,7 @@ namespace Dungeoneers.entities.actions
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, 14, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14, getG(tempV, player)));
                         }
                         else
                         {
@@ -154,7 +158,7 @@ namespace Dungeoneers.entities.actions
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, 10, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10, getG(tempV, player)));
                         }
                         else
                         {
@@ -174,7 +178,7 @@ namespace Dungeoneers.entities.actions
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, 14, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14, getG(tempV, player)));
                         }
                         else
                         {
@@ -194,7 +198,7 @@ namespace Dungeoneers.entities.actions
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, 10, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10, getG(tempV, player)));
                         }
                         else
                         {
@@ -214,7 +218,7 @@ namespace Dungeoneers.entities.actions
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, 14, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14, getG(tempV, player)));
                         }
                         else
                         {
@@ -235,8 +239,26 @@ namespace Dungeoneers.entities.actions
             // get path now.
             if (found)
             {
-               // TODO: backtrack through closed list parents to get path.
+                // backtrack through closed list parents to get path.
+                AIPoint start = getAIPoint(player, closedList);
+                Stack<AIPoint> pointStack = new Stack<AIPoint>();
+                bool pathing = true;
+                while (pathing)
+                {
+                    if (start.Parent == startPoint.Position)
+                    {
+                        pathing = false;
+                        return start.Position;
+                        // move mob to start.position
+                    }
+                    else
+                    {
+                        pointStack.Push(start);
+                        start = getAIPoint(start.Parent, closedList);
+                    }
+                }
             }
+            return Vector2.Zero;
         }
 
         // grab the AIPoint based on vector

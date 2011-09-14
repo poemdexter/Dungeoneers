@@ -9,11 +9,11 @@ using Microsoft.Xna.Framework;
 
 namespace Dungeoneers.entities.actions
 {
-    class ChangeDeltaPosition : EntityAction
+    class ChangeAbsPosition : EntityAction
     {
-        public ChangeDeltaPosition()
+        public ChangeAbsPosition()
         {
-            this.Name = "ChangeDeltaPosition";
+            this.Name = "ChangeAbsPosition";
         }
 
         public override void Do(ActionArgs args)
@@ -24,8 +24,8 @@ namespace Dungeoneers.entities.actions
                 if (position != null)
                 {
                     Vector2 delta = ((ChangePositionArgs)args).Delta;
-                    position.X += (int)delta.X;
-                    position.Y += (int)delta.Y;
+                    position.X = (int)delta.X;
+                    position.Y = (int)delta.Y;
                 }
             }
         }

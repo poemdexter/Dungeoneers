@@ -107,6 +107,7 @@ namespace Dungeoneers
             {
                 // let the rest of the mobs act
                 nextGameStateChange();
+                playerActed = false;
             }
 
             base.Update(gameTime);
@@ -203,7 +204,7 @@ namespace Dungeoneers
         {
             keyboardElapsedTime -= gameTime.ElapsedGameTime.Milliseconds;
 
-            if (keyboardElapsedTime <= 0)
+            if (keyboardElapsedTime <= 0 && !playerActed)
             {
                 int x = (int)((Position)dungeon.player.GetComponent("Position")).X;
                 int y = (int)((Position)dungeon.player.GetComponent("Position")).Y;
@@ -220,13 +221,13 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(-1, 0)));
+                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 0)));
                             dungeon.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(-1, 0)));
+                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 0)));
                         dungeon.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
                     }
                     keyboardElapsedTime = 150;
@@ -244,13 +245,13 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(1, 0)));
+                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 0)));
                             dungeon.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(1, 0)));
+                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 0)));
                         dungeon.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
                     }
                     keyboardElapsedTime = 150;
@@ -268,12 +269,12 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, -1)));
+                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, -1)));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, -1)));
+                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, -1)));
                     }
                     keyboardElapsedTime = 150;
                     playerActed = true;
@@ -290,12 +291,12 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, 1)));
+                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, 1)));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangeDeltaPositionArgs(new Vector2(0, 1)));
+                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, 1)));
                     }
                     keyboardElapsedTime = 150;
                     playerActed = true;

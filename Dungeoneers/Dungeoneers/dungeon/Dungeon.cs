@@ -78,7 +78,7 @@ namespace Dungeoneers.dungeon
             int x = random.Next(room.Left, room.Right);
             int y = random.Next(room.Top, room.Bottom);
             skeleton.AddComponent(new Position(x, y));
-            skeleton.AddAction(new ChangeDeltaPosition());
+            skeleton.AddAction(new ChangeAbsPosition());
             skeleton.AddAction(new ChangeDirectionOfAnimation());
             skeleton.AddAction(new MoveTowardsPlayer());
         }
