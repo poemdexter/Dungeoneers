@@ -127,6 +127,7 @@
     <Compile Include="framework\ActionArgs.cs" />
     <Compile Include="framework\Component.cs" />
     <Compile Include="framework\Entity.cs" />
+    <Compile Include="framework\Meta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

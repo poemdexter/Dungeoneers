@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Dungeoneers.entities.components;
 using Dungeoneers.entities.actions;
 using Microsoft.Xna.Framework;
+using Dungeoneers.framework;
 
 namespace Dungeoneers.dungeon
 {
@@ -260,7 +261,7 @@ namespace Dungeoneers.dungeon
                             //    1 C 5
                             //    7 X 6
 
-                            if (x - 1 > 0 && floor[x - 1][y] == 1)
+                            if (x - 1 > 0 && floor[x - 1][y] == (int)Tiles.Floor)
                             {
                                 floor[x][y] = 3;
                             }

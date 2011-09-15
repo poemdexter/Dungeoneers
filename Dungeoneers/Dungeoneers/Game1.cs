@@ -119,7 +119,7 @@ namespace Dungeoneers
             dungeon.skeleton.DoAction("MoveTowardsPlayer",
                 new MoveTowardsPlayerArgs(((Position)dungeon.player.GetComponent("Position")).X,
                                           ((Position)dungeon.player.GetComponent("Position")).Y,
-                                          dungeon.floor));
+                                          dungeon.floor, dungeon.manager));
         }
 
         protected override void Draw(GameTime gameTime)

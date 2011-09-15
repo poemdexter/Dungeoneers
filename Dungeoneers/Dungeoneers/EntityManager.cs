@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Dungeoneers.entities.components;
 
 namespace Dungeoneers
 {
@@ -39,6 +40,17 @@ namespace Dungeoneers
         public List<Entity> getDoorList()
         {
             return new List<Entity>(doorDict.Values);
+        }
+
+        // will return true if door is open or if door doesn't exist
+        public bool isDoorOpen(Vector2 position)
+        {
+            if (doorDict.ContainsKey(position))
+            {
+                return ((Openable)doorDict[position].GetComponent("Openable")).Opened;
+            }
+            else
+                return true;
         }
     }
 }

@@ -11,12 +11,14 @@ namespace Dungeoneers.entities.action_args
         public float PlayerX { get; set; }
         public float PlayerY { get; set; }
         public int[][] floor { get; set; }
+        public EntityManager manager { get; set; }
 
-        public MoveTowardsPlayerArgs(float X, float Y, int[][] fl)
+        public MoveTowardsPlayerArgs(float X, float Y, int[][] fl, EntityManager man)
         {
             PlayerX = X;
             PlayerY = Y;
             floor = fl;
+            manager = man;
         }
     }
 }

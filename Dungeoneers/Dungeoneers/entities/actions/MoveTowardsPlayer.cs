@@ -51,7 +51,7 @@ namespace Dungeoneers.entities.actions
             Vector2 player = new Vector2(args.PlayerX, args.PlayerY);
             bool found = false;
 
-            while (openList.Count != 0 || !found)
+            while (openList.Count != 0 && !found)
             {
                 // 4
                 AIPoint parentAI = openList[0];
@@ -66,14 +66,15 @@ namespace Dungeoneers.entities.actions
                 }
 
                 Vector2 parent = new Vector2(parentAI.Position.X, parentAI.Position.Y);
+                Vector2 tempV;
                 // 2
                 // checking in this order
                 // 2 3 4
                 // 1 X 5
                 // 8 7 6
-                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y] == 1) // 1
+                tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y);
+                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y] == 1 && args.manager.isDoorOpen(tempV)) // 1
                 {
-                    Vector2 tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y);
                     if (!isInList(tempV, closedList)) // 5
                     {
                         if (!isInList(tempV, openList)) // 6
@@ -91,9 +92,9 @@ namespace Dungeoneers.entities.actions
                     }
                 }
 
-                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y - 1] == 1) // 2
+                tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y - 1);
+                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV)) // 2
                 {
-                    Vector2 tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y - 1);
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
@@ -110,10 +111,10 @@ namespace Dungeoneers.entities.actions
                         }
                     }
                 }
-
-                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y - 1] == 1) // 3
+                
+                tempV = new Vector2(parentAI.Position.X, parentAI.Position.Y - 1);
+                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV)) // 3
                 {
-                    Vector2 tempV = new Vector2(parentAI.Position.X, parentAI.Position.Y - 1);
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
@@ -131,9 +132,9 @@ namespace Dungeoneers.entities.actions
                     }
                 }
 
-                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y - 1] == 1) // 4
-                {
-                    Vector2 tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y - 1);
+                tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y - 1);
+                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV)) // 4
+                { 
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
@@ -151,9 +152,9 @@ namespace Dungeoneers.entities.actions
                     }
                 }
 
-                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y] == 1) // 5
+                tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y);
+                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y] == 1 && args.manager.isDoorOpen(tempV)) // 5
                 {
-                    Vector2 tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y);
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
@@ -171,9 +172,9 @@ namespace Dungeoneers.entities.actions
                     }
                 }
 
-                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y + 1] == 1) // 6
+                tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y + 1);
+                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV)) // 6
                 {
-                    Vector2 tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y + 1);
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
@@ -191,9 +192,9 @@ namespace Dungeoneers.entities.actions
                     }
                 }
 
-                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y + 1] == 1) // 7
+                tempV = new Vector2(parentAI.Position.X, parentAI.Position.Y + 1);
+                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV)) // 7
                 {
-                    Vector2 tempV = new Vector2(parentAI.Position.X, parentAI.Position.Y + 1);
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
@@ -211,9 +212,9 @@ namespace Dungeoneers.entities.actions
                     }
                 }
 
-                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y + 1] == 1) // 8
+                tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y + 1);
+                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV)) // 8
                 {
-                    Vector2 tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y + 1);
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
