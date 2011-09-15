@@ -116,9 +116,9 @@ namespace Dungeoneers
         public void nextGameStateChange()
         {
             // player moved, so now it's mob's turn
-            dungeon.skeleton.DoAction("MoveTowardsPlayer", 
+            dungeon.skeleton.DoAction("MoveTowardsPlayer",
                 new MoveTowardsPlayerArgs(((Position)dungeon.player.GetComponent("Position")).X,
-                                          ((Position)dungeon.player.GetComponent("Position")).Y, 
+                                          ((Position)dungeon.player.GetComponent("Position")).Y,
                                           dungeon.floor));
         }
 
@@ -209,7 +209,8 @@ namespace Dungeoneers
                 int x = (int)((Position)dungeon.player.GetComponent("Position")).X;
                 int y = (int)((Position)dungeon.player.GetComponent("Position")).Y;
 
-                if (keyboard.IsKeyDown(Keys.Left) && dungeon.floor[x - 1][y] == 1)
+                // left
+                if ((keyboard.IsKeyDown(Keys.NumPad4) || keyboard.IsKeyDown(Keys.H)) && dungeon.floor[x - 1][y] == 1)
                 {
                     if (dungeon.manager.getDoor(new Vector2(x - 1, y)) != null)
                     {
@@ -233,7 +234,9 @@ namespace Dungeoneers
                     keyboardElapsedTime = 150;
                     playerActed = true;
                 }
-                else if (keyboard.IsKeyDown(Keys.Right) && dungeon.floor[x + 1][y] == 1)
+
+                // right
+                else if ((keyboard.IsKeyDown(Keys.NumPad6) || keyboard.IsKeyDown(Keys.L)) && dungeon.floor[x + 1][y] == 1)
                 {
                     if (dungeon.manager.getDoor(new Vector2(x + 1, y)) != null)
                     {
@@ -257,7 +260,9 @@ namespace Dungeoneers
                     keyboardElapsedTime = 150;
                     playerActed = true;
                 }
-                else if (keyboard.IsKeyDown(Keys.Up) && dungeon.floor[x][y - 1] == 1)
+
+                // up
+                else if ((keyboard.IsKeyDown(Keys.NumPad8) || keyboard.IsKeyDown(Keys.K)) && dungeon.floor[x][y - 1] == 1)
                 {
                     if (dungeon.manager.getDoor(new Vector2(x, y - 1)) != null)
                     {
@@ -279,7 +284,9 @@ namespace Dungeoneers
                     keyboardElapsedTime = 150;
                     playerActed = true;
                 }
-                else if (keyboard.IsKeyDown(Keys.Down) && dungeon.floor[x][y + 1] == 1)
+
+                // down
+                else if ((keyboard.IsKeyDown(Keys.NumPad2) || keyboard.IsKeyDown(Keys.J)) && dungeon.floor[x][y + 1] == 1)
                 {
                     if (dungeon.manager.getDoor(new Vector2(x, y + 1)) != null)
                     {
@@ -297,6 +304,102 @@ namespace Dungeoneers
                     else
                     {
                         dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, 1)));
+                    }
+                    keyboardElapsedTime = 150;
+                    playerActed = true;
+                }
+
+                // northwest
+                else if ((keyboard.IsKeyDown(Keys.NumPad7) || keyboard.IsKeyDown(Keys.Y)) && dungeon.floor[x - 1][y - 1] == 1)
+                {
+                    if (dungeon.manager.getDoor(new Vector2(x - 1, y - 1)) != null)
+                    {
+                        Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y - 1));
+                        if (!(door.GetComponent("Openable") as Openable).Opened)
+                        {
+                            (door.GetComponent("Openable") as Openable).Opened = true;
+                            door.DoAction("NextFrameOfAnimation");
+                        }
+                        else
+                        {
+                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, -1)));
+                        }
+                    }
+                    else
+                    {
+                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, -1)));
+                    }
+                    keyboardElapsedTime = 150;
+                    playerActed = true;
+                }
+
+                // northeast
+                else if ((keyboard.IsKeyDown(Keys.NumPad9) || keyboard.IsKeyDown(Keys.U)) && dungeon.floor[x + 1][y - 1] == 1)
+                {
+                    if (dungeon.manager.getDoor(new Vector2(x + 1, y - 1)) != null)
+                    {
+                        Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y - 1));
+                        if (!(door.GetComponent("Openable") as Openable).Opened)
+                        {
+                            (door.GetComponent("Openable") as Openable).Opened = true;
+                            door.DoAction("NextFrameOfAnimation");
+                        }
+                        else
+                        {
+                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, -1)));
+                        }
+                    }
+                    else
+                    {
+                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, -1)));
+                    }
+                    keyboardElapsedTime = 150;
+                    playerActed = true;
+                }
+
+                // southwest
+                else if ((keyboard.IsKeyDown(Keys.NumPad1) || keyboard.IsKeyDown(Keys.B)) && dungeon.floor[x - 1][y + 1] == 1)
+                {
+                    if (dungeon.manager.getDoor(new Vector2(x - 1, y + 1)) != null)
+                    {
+                        Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y + 1));
+                        if (!(door.GetComponent("Openable") as Openable).Opened)
+                        {
+                            (door.GetComponent("Openable") as Openable).Opened = true;
+                            door.DoAction("NextFrameOfAnimation");
+                        }
+                        else
+                        {
+                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 1)));
+                        }
+                    }
+                    else
+                    {
+                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 1)));
+                    }
+                    keyboardElapsedTime = 150;
+                    playerActed = true;
+                }
+
+                // southeast
+                else if ((keyboard.IsKeyDown(Keys.NumPad3) || keyboard.IsKeyDown(Keys.N)) && dungeon.floor[x + 1][y + 1] == 1)
+                {
+                    if (dungeon.manager.getDoor(new Vector2(x + 1, y + 1)) != null)
+                    {
+                        Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y + 1));
+                        if (!(door.GetComponent("Openable") as Openable).Opened)
+                        {
+                            (door.GetComponent("Openable") as Openable).Opened = true;
+                            door.DoAction("NextFrameOfAnimation");
+                        }
+                        else
+                        {
+                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 1)));
+                        }
+                    }
+                    else
+                    {
+                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 1)));
                     }
                     keyboardElapsedTime = 150;
                     playerActed = true;
