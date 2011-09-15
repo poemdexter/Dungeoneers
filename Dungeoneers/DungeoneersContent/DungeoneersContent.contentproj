@@ -111,8 +111,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="gui\gui_background.png">
-      <Name>gui_background</Name>
+    <Compile Include="gui\ui_background.png">
+      <Name>ui_background</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -127,6 +127,28 @@
   <ItemGroup>
     <Compile Include="env\shrub.png">
       <Name>shrub</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="gui\ui_bar.png">
+      <Name>ui_bar</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="gui\ui_barpiece_exp.png">
+      <Name>ui_barpiece_exp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="gui\ui_barpiece_hp.png">
+      <Name>ui_barpiece_hp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="gui\ui_barpiece_mp.png">
+      <Name>ui_barpiece_mp</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -192,9 +192,34 @@ namespace Dungeoneers
 
             // draw ui stuff
             spriteBatch.DrawString(lofiFont, "poemdexter", new Vector2(24, 24), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-            spriteBatch.DrawString(lofiFont, "Bandit", new Vector2(24, 44), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-            spriteBatch.DrawString(lofiFont, "LVL: 1", new Vector2(24, 64), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-            spriteBatch.DrawString(lofiFont, "EXP: 0", new Vector2(24, 84), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "Bandit (1)", new Vector2(24, 44), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            
+            spriteBatch.DrawString(lofiFont, "EXP: 250/500", new Vector2(24, 84), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(spriteDict["ui_bar"], new Vector2(24, 99), spriteDict["ui_bar"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
+            for (int x = 0; x < 10; x++)
+            {
+                spriteBatch.Draw(spriteDict["ui_barpiece_exp"], new Vector2(28 + (8 * x), 99), spriteDict["ui_barpiece_exp"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
+            }
+            spriteBatch.DrawString(lofiFont, "HP: 5/10", new Vector2(24, 124), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(spriteDict["ui_bar"], new Vector2(24, 139), spriteDict["ui_bar"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
+            for (int x = 0; x < 10; x++)
+            {
+                spriteBatch.Draw(spriteDict["ui_barpiece_hp"], new Vector2(28 + (8 * x), 139), spriteDict["ui_barpiece_hp"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
+            }
+            spriteBatch.DrawString(lofiFont, "MP: 5/10", new Vector2(24, 164), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(spriteDict["ui_bar"], new Vector2(24, 179), spriteDict["ui_bar"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
+            for (int x = 0; x < 10; x++)
+            {
+                spriteBatch.Draw(spriteDict["ui_barpiece_mp"], new Vector2(28 + (8 * x), 179), spriteDict["ui_barpiece_mp"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
+            }
+
+            spriteBatch.DrawString(lofiFont, "STR: 6", new Vector2(24, 224), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "DEX: 9", new Vector2(104, 224), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "WIS: 3", new Vector2(184, 224), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "Armor: 2", new Vector2(24, 244), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+
+            spriteBatch.DrawString(lofiFont, "Weapon: Dagger (1d4)", new Vector2(24, 264), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "Ranged: -unequipped-", new Vector2(24, 284), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
 
             spriteBatch.End();
             base.Draw(gameTime);
@@ -421,7 +446,11 @@ namespace Dungeoneers
             spriteDict.Add("door_wood_we", Content.Load<Texture2D>("env/door_wood_we"));
             spriteDict.Add("stairs_up", Content.Load<Texture2D>("env/stairs_up"));
             spriteDict.Add("stairs_down", Content.Load<Texture2D>("env/stairs_down"));
-            spriteDict.Add("gui_background", Content.Load<Texture2D>("gui/gui_background"));
+            spriteDict.Add("gui_background", Content.Load<Texture2D>("gui/ui_background"));
+            spriteDict.Add("ui_bar", Content.Load<Texture2D>("gui/ui_bar"));
+            spriteDict.Add("ui_barpiece_exp", Content.Load<Texture2D>("gui/ui_barpiece_exp"));
+            spriteDict.Add("ui_barpiece_hp", Content.Load<Texture2D>("gui/ui_barpiece_hp"));
+            spriteDict.Add("ui_barpiece_mp", Content.Load<Texture2D>("gui/ui_barpiece_mp"));
             spriteDict.Add("shrub", Content.Load<Texture2D>("env/shrub"));
         }
 
