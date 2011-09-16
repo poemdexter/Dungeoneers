@@ -115,11 +115,17 @@ namespace Dungeoneers
 
         public void nextGameStateChange()
         {
-            // player moved, so now it's mob's turn
-            dungeon.skeleton.DoAction("MoveTowardsPlayer",
-                new MoveTowardsPlayerArgs(((Position)dungeon.player.GetComponent("Position")).X,
-                                          ((Position)dungeon.player.GetComponent("Position")).Y,
-                                          dungeon.floor, dungeon.manager));
+            foreach (Entity skeleton in dungeon.manager.getMobList())
+            {
+                // check if player is close, if so attack!
+
+                // player moved, so now it's mob's turn
+                skeleton.DoAction("MoveTowardsPlayer",
+                    new MoveTowardsPlayerArgs(((Position)dungeon.manager.player.GetComponent("Position")).X,
+                                              ((Position)dungeon.manager.player.GetComponent("Position")).Y,
+                                              dungeon.floor, dungeon.manager));
+
+            }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -164,22 +170,24 @@ namespace Dungeoneers
             spriteBatch.Draw(spriteDict["stairs_down"], new Vector2(sx * (scale * 8), sy * (scale * 8)), sanimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, sanimation.Effects, 0f);
 
             // draw player
-            int px = (int)((Position)dungeon.player.GetComponent("Position")).X;
-            int py = (int)((Position)dungeon.player.GetComponent("Position")).Y;
-            Animation panimation = (Animation)dungeon.player.GetComponent("Animation");
+            int px = (int)((Position)dungeon.manager.player.GetComponent("Position")).X;
+            int py = (int)((Position)dungeon.manager.player.GetComponent("Position")).Y;
+            Animation panimation = (Animation)dungeon.manager.player.GetComponent("Animation");
             spriteBatch.Draw(panimation.SourceTexture, new Vector2(px * (scale * 8), py * (scale * 8)), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
 
             // draw mobs
-            int mx = (int)((Position)dungeon.skeleton.GetComponent("Position")).X;
-            int my = (int)((Position)dungeon.skeleton.GetComponent("Position")).Y;
-            Animation manimation = (Animation)dungeon.skeleton.GetComponent("Animation");
-            spriteBatch.Draw(manimation.SourceTexture, new Vector2(mx * (scale * 8), my * (scale * 8)), manimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, manimation.Effects, 0f);
-
+            foreach (Entity skeleton in dungeon.manager.getMobList())
+            {
+                int mx = (int)((Position)skeleton.GetComponent("Position")).X;
+                int my = (int)((Position)skeleton.GetComponent("Position")).Y;
+                Animation manimation = (Animation)skeleton.GetComponent("Animation");
+                spriteBatch.Draw(manimation.SourceTexture, new Vector2(mx * (scale * 8), my * (scale * 8)), manimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, manimation.Effects, 0f);
+            }
             spriteBatch.End();
 
             // draw version
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
-            spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.1a", new Vector2(0, leftViewport.Height - 15), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.2a", new Vector2(0, leftViewport.Height - 15), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.End();
 
             // right side of screen
@@ -231,8 +239,8 @@ namespace Dungeoneers
 
             if (keyboardElapsedTime <= 0 && !playerActed)
             {
-                int x = (int)((Position)dungeon.player.GetComponent("Position")).X;
-                int y = (int)((Position)dungeon.player.GetComponent("Position")).Y;
+                int x = (int)((Position)dungeon.manager.player.GetComponent("Position")).X;
+                int y = (int)((Position)dungeon.manager.player.GetComponent("Position")).Y;
 
                 // left
                 if ((keyboard.IsKeyDown(Keys.NumPad4) || keyboard.IsKeyDown(Keys.H)) && dungeon.floor[x - 1][y] == 1)
@@ -247,14 +255,14 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 0)));
-                            dungeon.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
+                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 0)));
+                            dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 0)));
-                        dungeon.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
+                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 0)));
+                        dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
                     }
                     keyboardElapsedTime = 150;
                     playerActed = true;
@@ -273,14 +281,14 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 0)));
-                            dungeon.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
+                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 0)));
+                            dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 0)));
-                        dungeon.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
+                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 0)));
+                        dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
                     }
                     keyboardElapsedTime = 150;
                     playerActed = true;
@@ -299,12 +307,12 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, -1)));
+                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, -1)));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, -1)));
+                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, -1)));
                     }
                     keyboardElapsedTime = 150;
                     playerActed = true;
@@ -323,12 +331,12 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, 1)));
+                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, 1)));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, 1)));
+                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, 1)));
                     }
                     keyboardElapsedTime = 150;
                     playerActed = true;
@@ -347,12 +355,12 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, -1)));
+                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, -1)));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, -1)));
+                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, -1)));
                     }
                     keyboardElapsedTime = 150;
                     playerActed = true;
@@ -371,12 +379,12 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, -1)));
+                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, -1)));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, -1)));
+                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, -1)));
                     }
                     keyboardElapsedTime = 150;
                     playerActed = true;
@@ -395,12 +403,12 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 1)));
+                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 1)));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 1)));
+                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 1)));
                     }
                     keyboardElapsedTime = 150;
                     playerActed = true;
@@ -419,12 +427,12 @@ namespace Dungeoneers
                         }
                         else
                         {
-                            dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 1)));
+                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 1)));
                         }
                     }
                     else
                     {
-                        dungeon.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 1)));
+                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 1)));
                     }
                     keyboardElapsedTime = 150;
                     playerActed = true;
@@ -478,7 +486,7 @@ namespace Dungeoneers
             Matrix trans;
 
             // X - ( viewport width / (frameheight * scale) ) / 2 ish
-            Vector3 playerV = new Vector3(((Position)dungeon.player.GetComponent("Position")).X - 14.5f, ((Position)dungeon.player.GetComponent("Position")).Y - 11f, 0);
+            Vector3 playerV = new Vector3(((Position)dungeon.manager.player.GetComponent("Position")).X - 14.5f, ((Position)dungeon.manager.player.GetComponent("Position")).Y - 11f, 0);
             Vector3 viewV = new Vector3(scale * ((Animation)dungeon.StairsUp.GetComponent("Animation")).FrameHeight, scale * ((Animation)dungeon.StairsUp.GetComponent("Animation")).FrameHeight, 0);
 
             trans = Matrix.CreateTranslation(playerV * -viewV);

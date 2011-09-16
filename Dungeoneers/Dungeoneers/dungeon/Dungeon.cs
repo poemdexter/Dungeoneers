@@ -16,7 +16,7 @@ namespace Dungeoneers.dungeon
         private Random random { get; set; }
         public List<Entity> torchList;
         public List<Rectangle> roomList;
-        public Entity StairsUp, StairsDown, player, skeleton;
+        public Entity StairsUp, StairsDown;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
         int dwidth = 64;
         int dheight = 48;
@@ -73,24 +73,22 @@ namespace Dungeoneers.dungeon
 
         public void addMobs()
         {
-            skeleton = new Entity();
-            skeleton.AddComponent(new Animation(SpriteDict["skeleton"], 1, false, SpriteEffects.None));
+            Animation a = new Animation(SpriteDict["skeleton"], 1, false, SpriteEffects.None);
             Rectangle room = roomList[random.Next(0, roomList.Count)];
             int x = random.Next(room.Left, room.Right);
             int y = random.Next(room.Top, room.Bottom);
-            skeleton.AddComponent(new Position(x, y));
-            skeleton.AddAction(new ChangeAbsPosition());
-            skeleton.AddAction(new ChangeDirectionOfAnimation());
-            skeleton.AddAction(new MoveTowardsPlayer());
+            Position p = new Position(x, y);
+            manager.addMob(a,p);
         }
 
         public void addPlayer()
         {
-            player = new Entity();
+            Entity player = new Entity();
             player.AddComponent(new Position((StairsUp.GetComponent("Position") as Position).X, (StairsUp.GetComponent("Position") as Position).Y));
             player.AddComponent(new Animation(SpriteDict["bandit"], 1, false, SpriteEffects.None));
             player.AddAction(new ChangeDeltaPosition());
             player.AddAction(new ChangeDirectionOfAnimation());
+            manager.addPlayer(player);
         }
 
         // add stairs up

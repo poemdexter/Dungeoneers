@@ -120,7 +120,12 @@
     <Compile Include="entities\actions\MoveTowardsPlayer.cs" />
     <Compile Include="entities\actions\NextFrameOfAnimation.cs" />
     <Compile Include="entities\components\Animation.cs" />
+    <Compile Include="entities\components\Experience.cs" />
+    <Compile Include="entities\components\Hitpoints.cs" />
+    <Compile Include="entities\components\Mana.cs" />
     <Compile Include="entities\components\Openable.cs" />
+    <Compile Include="entities\components\Player_Class.cs" />
+    <Compile Include="entities\components\Player_Info.cs" />
     <Compile Include="entities\components\Position.cs" />
     <Compile Include="EntityManager.cs" />
     <Compile Include="framework\Action.cs" />
