@@ -7,6 +7,7 @@ using Dungeoneers.entities.components;
 using Dungeoneers.entities.actions;
 using Microsoft.Xna.Framework;
 using Dungeoneers.framework;
+using Dungeoneers.managers;
 
 namespace Dungeoneers.dungeon
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Dungeoneers.framework;
+using Dungeoneers.managers;
 
 namespace Dungeoneers.entities.action_args
 {

@@ -107,6 +107,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="entities\action args\EquipArmorArgs.cs" />
+    <Compile Include="entities\action args\EquipWeaponArgs.cs" />
+    <Compile Include="entities\actions\EquipItem.cs" />
+    <Compile Include="entities\components\Armor.cs" />
+    <Compile Include="entities\components\Equipment.cs" />
+    <Compile Include="entities\components\Weapon.cs" />
+    <Compile Include="managers\CombatManager.cs" />
     <Compile Include="dungeon\AIPoint.cs" />
     <Compile Include="dungeon\Dungeon.cs" />
     <Compile Include="dungeon\Node.cs" />
@@ -127,12 +134,13 @@
     <Compile Include="entities\components\Player_Class.cs" />
     <Compile Include="entities\components\Player_Info.cs" />
     <Compile Include="entities\components\Position.cs" />
-    <Compile Include="EntityManager.cs" />
+    <Compile Include="managers\EntityManager.cs" />
     <Compile Include="framework\Action.cs" />
     <Compile Include="framework\ActionArgs.cs" />
     <Compile Include="framework\Component.cs" />
     <Compile Include="framework\Entity.cs" />
-    <Compile Include="framework\Meta.cs" />
+    <Compile Include="managers\RollManager.cs" />
+    <Compile Include="Meta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

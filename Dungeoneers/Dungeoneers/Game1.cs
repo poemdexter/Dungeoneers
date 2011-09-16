@@ -12,6 +12,7 @@ using Dungeoneers.dungeon;
 using Dungeoneers.entities.components;
 using Dungeoneers.entities.actions;
 using Dungeoneers.entities.action_args;
+using Dungeoneers.managers;
 
 namespace Dungeoneers
 {
@@ -115,16 +116,19 @@ namespace Dungeoneers
 
         public void nextGameStateChange()
         {
+            Vector2 playerPos = dungeon.manager.getPlayerPosition();
             foreach (Entity skeleton in dungeon.manager.getMobList())
             {
                 // check if player is close, if so attack!
-
-                // player moved, so now it's mob's turn
-                skeleton.DoAction("MoveTowardsPlayer",
-                    new MoveTowardsPlayerArgs(((Position)dungeon.manager.player.GetComponent("Position")).X,
-                                              ((Position)dungeon.manager.player.GetComponent("Position")).Y,
-                                              dungeon.floor, dungeon.manager));
-
+                if (dungeon.manager.canAttackPlayer(skeleton.Id))
+                {
+                    CombatManager.attack(skeleton, dungeon.manager.player);
+                }
+                else
+                {
+                    // player moved, so now it's mob's turn
+                    skeleton.DoAction("MoveTowardsPlayer", new MoveTowardsPlayerArgs(playerPos.X, playerPos.Y, dungeon.floor, dungeon.manager));
+                }
             }
         }
 
