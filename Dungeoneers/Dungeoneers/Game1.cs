@@ -158,15 +158,15 @@ namespace Dungeoneers
             }
 
             // draw stairs
-            int sx = (int)((Position)dungeon.StairsUp.GetComponent("Position")).X;
-            int sy = (int)((Position)dungeon.StairsUp.GetComponent("Position")).Y;
-            Animation sanimation = (Animation)dungeon.StairsUp.GetComponent("Animation");
+            int sx = (int)((Position)dungeon.manager.StairsUp.GetComponent("Position")).X;
+            int sy = (int)((Position)dungeon.manager.StairsUp.GetComponent("Position")).Y;
+            Animation sanimation = (Animation)dungeon.manager.StairsUp.GetComponent("Animation");
             spriteBatch.Draw(spriteDict["stairs_up"], new Vector2(sx * (scale * 8), sy * (scale * 8)), sanimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, sanimation.Effects, 0f);
 
             // draw stairs
-            sx = (int)((Position)dungeon.StairsDown.GetComponent("Position")).X;
-            sy = (int)((Position)dungeon.StairsDown.GetComponent("Position")).Y;
-            sanimation = (Animation)dungeon.StairsDown.GetComponent("Animation");
+            sx = (int)((Position)dungeon.manager.StairsDown.GetComponent("Position")).X;
+            sy = (int)((Position)dungeon.manager.StairsDown.GetComponent("Position")).Y;
+            sanimation = (Animation)dungeon.manager.StairsDown.GetComponent("Animation");
             spriteBatch.Draw(spriteDict["stairs_down"], new Vector2(sx * (scale * 8), sy * (scale * 8)), sanimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, sanimation.Effects, 0f);
 
             // draw player
@@ -487,7 +487,7 @@ namespace Dungeoneers
 
             // X - ( viewport width / (frameheight * scale) ) / 2 ish
             Vector3 playerV = new Vector3(((Position)dungeon.manager.player.GetComponent("Position")).X - 14.5f, ((Position)dungeon.manager.player.GetComponent("Position")).Y - 11f, 0);
-            Vector3 viewV = new Vector3(scale * ((Animation)dungeon.StairsUp.GetComponent("Animation")).FrameHeight, scale * ((Animation)dungeon.StairsUp.GetComponent("Animation")).FrameHeight, 0);
+            Vector3 viewV = new Vector3(scale * ((Animation)dungeon.manager.StairsUp.GetComponent("Animation")).FrameHeight, scale * ((Animation)dungeon.manager.StairsUp.GetComponent("Animation")).FrameHeight, 0);
 
             trans = Matrix.CreateTranslation(playerV * -viewV);
 

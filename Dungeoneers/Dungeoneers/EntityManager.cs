@@ -16,6 +16,8 @@ namespace Dungeoneers
         private Dictionary<int, Entity> mobDict;
         private int key = 0;
         public Entity player { get; set; }
+        public Entity StairsUp { get; set; }
+        public Entity StairsDown { get; set; }
 
         public EntityManager()
         {
@@ -33,6 +35,16 @@ namespace Dungeoneers
         public void addPlayer(Entity e)
         {
             this.player = e;
+        }
+
+        public void addStairsUp(Entity e)
+        {
+            this.StairsUp = e;
+        }
+
+        public void addStairsDown(Entity e)
+        {
+            this.StairsDown = e;
         }
 
         public void addMob(Component act, Component pos)

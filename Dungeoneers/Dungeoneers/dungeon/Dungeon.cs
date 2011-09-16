@@ -16,7 +16,6 @@ namespace Dungeoneers.dungeon
         private Random random { get; set; }
         public List<Entity> torchList;
         public List<Rectangle> roomList;
-        public Entity StairsUp, StairsDown;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
         int dwidth = 64;
         int dheight = 48;
@@ -84,7 +83,7 @@ namespace Dungeoneers.dungeon
         public void addPlayer()
         {
             Entity player = new Entity();
-            player.AddComponent(new Position((StairsUp.GetComponent("Position") as Position).X, (StairsUp.GetComponent("Position") as Position).Y));
+            player.AddComponent(new Position((manager.StairsUp.GetComponent("Position") as Position).X, (manager.StairsUp.GetComponent("Position") as Position).Y));
             player.AddComponent(new Animation(SpriteDict["bandit"], 1, false, SpriteEffects.None));
             player.AddAction(new ChangeDeltaPosition());
             player.AddAction(new ChangeDirectionOfAnimation());
@@ -94,19 +93,22 @@ namespace Dungeoneers.dungeon
         // add stairs up
         public void addStairs()
         {
-            StairsUp = new Entity();
+            Entity StairsUp = new Entity();
             StairsUp.AddComponent(new Animation(SpriteDict["stairs_up"], 1, false, SpriteEffects.None));
             Rectangle room = roomList[random.Next(0, roomList.Count)];
             int x = random.Next(room.Left, room.Right);
             int y = random.Next(room.Top, room.Bottom);
             StairsUp.AddComponent(new Position(x, y));
 
-            StairsDown = new Entity();
+            Entity StairsDown = new Entity();
             StairsDown.AddComponent(new Animation(SpriteDict["stairs_down"], 1, false, SpriteEffects.None));
             Rectangle room1 = roomList[random.Next(0, roomList.Count)];
             int x1 = random.Next(room1.Left, room1.Right);
             int y1 = random.Next(room1.Top, room1.Bottom);
             StairsDown.AddComponent(new Position(x1, y1));
+
+            manager.addStairsUp(StairsUp);
+            manager.addStairsDown(StairsDown);
         }
 
         // add doors to the rooms
