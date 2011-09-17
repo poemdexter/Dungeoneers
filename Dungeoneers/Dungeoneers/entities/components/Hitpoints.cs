@@ -10,12 +10,14 @@ namespace Dungeoneers.entities.components
     {
         public int Max_HP { get; set; }
         public int Current_HP { get; set; }
+        public bool Alive { get; set; }
 
         public Hitpoints(int amount)
         {
             this.Name = "Hitpoints";
             this.Max_HP = amount;
             this.Current_HP = amount;
+            this.Alive = true;
         }
     }
 }

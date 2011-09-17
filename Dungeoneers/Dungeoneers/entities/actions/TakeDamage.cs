@@ -23,6 +23,8 @@ namespace Dungeoneers.entities.actions
                 if (hitpoints != null)
                 {
                     hitpoints.Current_HP -= ((TakeDamageArgs)args).Damage;
+                    if (hitpoints.Current_HP <= 0)
+                        hitpoints.Alive = false;
                 }
             }
         }

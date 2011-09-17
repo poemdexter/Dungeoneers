@@ -32,6 +32,30 @@ namespace Dungeoneers.managers
             return temp;
         }
 
+        public void attackPhase(Entity attacker, Entity target)
+        {
+            CombatManager.attack(attacker, target);
+        }
+
+        public bool isMobAliveInList(int ID)
+        {
+            if ((mobDict[ID].GetComponent("Hitpoints") as Hitpoints).Alive)
+                return true;
+            else
+                return false;
+        }
+
+        public bool isMobAliveAtPos(Vector2 pos)
+        {
+            foreach (Entity e in getMobList())
+            {
+                if (((Position)e.GetComponent("Position")).X == pos.X &&
+                    ((Position)e.GetComponent("Position")).Y == pos.Y)
+                    return true;
+            }
+            return false;
+        }
+
         public void addPlayer(Entity e)
         {
             this.player = e;
