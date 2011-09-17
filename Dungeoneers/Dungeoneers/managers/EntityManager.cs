@@ -7,6 +7,7 @@ using Dungeoneers.entities.components;
 using Dungeoneers.entities.actions;
 using Microsoft.Xna.Framework.Graphics;
 using Dungeoneers.framework;
+using Dungeoneers.entities.action_args;
 
 namespace Dungeoneers.managers
 {
@@ -35,6 +36,20 @@ namespace Dungeoneers.managers
         public void attackPhase(Entity attacker, Entity target)
         {
             CombatManager.attack(attacker, target);
+
+            if (!((Hitpoints)target.GetComponent("Hitpoints")).Alive)
+            {
+                if (target.Id == -1) // player dead
+                {
+                    // deal with player death
+                }
+                else
+                {
+                    // give exp
+                    attacker.DoAction("GainExperience", new GainExperienceArgs((target.GetComponent("LootTable") as LootTable).ExpOnDeath));
+                    // drop loot
+                }
+            }
         }
 
         public bool isMobAliveInList(int ID)

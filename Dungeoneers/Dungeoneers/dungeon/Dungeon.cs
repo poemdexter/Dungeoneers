@@ -18,8 +18,8 @@ namespace Dungeoneers.dungeon
         public List<Entity> torchList;
         public List<Rectangle> roomList;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
-        int dwidth = 64;
-        int dheight = 48;
+        int dwidth = 24;
+        int dheight = 24;
 
         public EntityManager manager;
 
@@ -84,6 +84,7 @@ namespace Dungeoneers.dungeon
             skeleton.AddAction(new TakeDamage());
             skeleton.AddAction(new MoveTowardsPlayer());
             skeleton.AddAction(new ChangeAbsPosition());
+            skeleton.AddComponent(new LootTable(25));
 
             // temp weapon armor
             skeleton.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true, "dagger"), (int)Slots.MainHand));
@@ -105,6 +106,7 @@ namespace Dungeoneers.dungeon
             player.AddAction(new TakeDamage());
             player.AddComponent(new Mana(20));
             player.AddComponent(new Experience(500));
+            player.AddAction(new GainExperience());
 
             // temp weapon armor
             player.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true, "dagger"), (int)Slots.MainHand));

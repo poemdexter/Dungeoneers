@@ -109,11 +109,14 @@
   <ItemGroup>
     <Compile Include="entities\action args\EquipArmorArgs.cs" />
     <Compile Include="entities\action args\EquipWeaponArgs.cs" />
+    <Compile Include="entities\action args\GainExperienceArgs.cs" />
     <Compile Include="entities\action args\TakeDamageArgs.cs" />
     <Compile Include="entities\actions\EquipItem.cs" />
+    <Compile Include="entities\actions\GainExperience.cs" />
     <Compile Include="entities\actions\TakeDamage.cs" />
     <Compile Include="entities\components\Armor.cs" />
     <Compile Include="entities\components\Equipment.cs" />
+    <Compile Include="entities\components\LootTable.cs" />
     <Compile Include="entities\components\Weapon.cs" />
     <Compile Include="managers\CombatManager.cs" />
     <Compile Include="dungeon\AIPoint.cs" />
