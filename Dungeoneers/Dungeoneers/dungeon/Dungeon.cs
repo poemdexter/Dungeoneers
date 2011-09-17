@@ -86,7 +86,7 @@ namespace Dungeoneers.dungeon
             skeleton.AddAction(new ChangeAbsPosition());
 
             // temp weapon armor
-            skeleton.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true), (int)Slots.MainHand));
+            skeleton.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true, "dagger"), (int)Slots.MainHand));
             skeleton.DoAction("EquipItem", new EquipArmorArgs(new Armor(5), (int)Slots.Chest));
 
             manager.addMob(skeleton);
@@ -103,9 +103,11 @@ namespace Dungeoneers.dungeon
             player.AddAction(new EquipItem());
             player.AddComponent(new Hitpoints(50));
             player.AddAction(new TakeDamage());
+            player.AddComponent(new Mana(20));
+            player.AddComponent(new Experience(500));
 
             // temp weapon armor
-            player.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true), (int)Slots.MainHand));
+            player.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true, "dagger"), (int)Slots.MainHand));
             player.DoAction("EquipItem", new EquipArmorArgs(new Armor(5), (int)Slots.Chest));
 
             manager.addPlayer(player);

@@ -197,34 +197,47 @@ namespace Dungeoneers
             spriteBatch.Draw(gui, Vector2.Zero, gui.Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
 
             // draw ui stuff
-            spriteBatch.DrawString(lofiFont, "poemdexter", new Vector2(24, 24), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-            spriteBatch.DrawString(lofiFont, "Bandit (1)", new Vector2(24, 44), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            Entity player = dungeon.manager.player;
 
-            spriteBatch.DrawString(lofiFont, "EXP: 250/500", new Vector2(24, 84), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "poemdexter", new Vector2(24, 24), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "Class Name (0)", new Vector2(24, 44), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+
+            Experience exp = player.GetComponent("Experience") as Experience;
+            spriteBatch.DrawString(lofiFont, "EXP: " + exp.Current_EXP + "/" + exp.Next_Level, new Vector2(24, 84), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.Draw(spriteDict["ui_bar"], new Vector2(24, 99), spriteDict["ui_bar"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
-            for (int x = 0; x < 10; x++)
+            int exp_ctr = (int)Math.Ceiling(((double)exp.Current_EXP / (double)exp.Next_Level) * 20);
+            for (int x = 0; x < exp_ctr; x++)
             {
                 spriteBatch.Draw(spriteDict["ui_barpiece_exp"], new Vector2(28 + (8 * x), 99), spriteDict["ui_barpiece_exp"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
             }
-            spriteBatch.DrawString(lofiFont, "HP: 5/10", new Vector2(24, 124), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            Hitpoints hp = player.GetComponent("Hitpoints") as Hitpoints;
+            spriteBatch.DrawString(lofiFont, "HP: " + hp.Current_HP + "/" + hp.Max_HP, new Vector2(24, 124), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.Draw(spriteDict["ui_bar"], new Vector2(24, 139), spriteDict["ui_bar"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
-            for (int x = 0; x < 10; x++)
+            int hp_ctr = (int)Math.Ceiling(((double)hp.Current_HP / (double)hp.Max_HP) * 20);
+            for (int x = 0; x < hp_ctr; x++)
             {
                 spriteBatch.Draw(spriteDict["ui_barpiece_hp"], new Vector2(28 + (8 * x), 139), spriteDict["ui_barpiece_hp"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
             }
-            spriteBatch.DrawString(lofiFont, "MP: 5/10", new Vector2(24, 164), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            Mana mp = player.GetComponent("Mana") as Mana;
+            spriteBatch.DrawString(lofiFont, "MP: " + mp.Current_MP + "/" + mp.Max_MP, new Vector2(24, 164), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.Draw(spriteDict["ui_bar"], new Vector2(24, 179), spriteDict["ui_bar"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
-            for (int x = 0; x < 10; x++)
+            int mp_ctr = (int)Math.Ceiling(((double)mp.Current_MP / (double)mp.Max_MP) * 20);
+            for (int x = 0; x < mp_ctr; x++)
             {
                 spriteBatch.Draw(spriteDict["ui_barpiece_mp"], new Vector2(28 + (8 * x), 179), spriteDict["ui_barpiece_mp"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
             }
 
-            spriteBatch.DrawString(lofiFont, "STR: 6", new Vector2(24, 224), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-            spriteBatch.DrawString(lofiFont, "DEX: 9", new Vector2(104, 224), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-            spriteBatch.DrawString(lofiFont, "WIS: 3", new Vector2(184, 224), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-            spriteBatch.DrawString(lofiFont, "Armor: 2", new Vector2(24, 244), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "STR: 0", new Vector2(24, 224), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "DEX: 0", new Vector2(104, 224), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "WIS: 0", new Vector2(184, 224), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            Armor armor = ((Equipment)dungeon.manager.player.GetComponent("Equipment")).Chest;
+            spriteBatch.DrawString(lofiFont, "Armor: " + armor.DmgReduction, new Vector2(24, 244), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
 
-            spriteBatch.DrawString(lofiFont, "Weapon: Dagger (1d4)", new Vector2(24, 264), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            Weapon weapon = ((Equipment)dungeon.manager.player.GetComponent("Equipment")).MainHand;
+            string dice = weapon.Dice_Num + "d" + weapon.Dice_Sides;
+            if (weapon.Roll_Mod != 0)
+                dice = dice + " + " + weapon.Roll_Mod;
+            spriteBatch.DrawString(lofiFont, "Weapon: " + weapon.WName + " (" + dice + ")" , new Vector2(24, 264), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.DrawString(lofiFont, "Ranged: -unequipped-", new Vector2(24, 284), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
 
             spriteBatch.End();

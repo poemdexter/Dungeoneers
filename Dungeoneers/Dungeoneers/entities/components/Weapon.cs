@@ -8,18 +8,21 @@ namespace Dungeoneers.entities.components
 {
     class Weapon : Component
     {
+        public string WName { get; set; }
         public int Dice_Num { get; set; }
         public int Dice_Sides { get; set; }
         public int Roll_Mod { get; set; }
         public bool Melee {get; set; } // is a melee weapon?
 
         // 2d8 + 10 == adb + c
-        public Weapon(int a, int b, int c, bool melee)
+        public Weapon(int a, int b, int c, bool melee, string name)
         {
+            this.Name = "Weapon";
             this.Dice_Num = a;
             this.Dice_Sides = b;
             this.Roll_Mod = c;
             this.Melee = melee;
+            this.WName = name;
         }
     }
 }
