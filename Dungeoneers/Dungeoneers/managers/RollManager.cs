@@ -9,7 +9,7 @@ namespace Dungeoneers.managers
     {
         public static int roll(int dNum, int dSide, int mod)
         {
-            Random random = new Random(DateTime.Now.Millisecond);
+            Random random = new Random();
             int total = 0;
             for (int x = 1; x <= dNum; x++)
             {

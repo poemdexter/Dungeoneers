@@ -10,10 +10,10 @@ namespace Dungeoneers.entities.components
     {
         public int DmgReduction { get; set; }
 
-        public Armor()
+        public Armor(int value)
         {
             this.Name = "Armor";
-            this.DmgReduction = 3;
+            this.DmgReduction = value;
         }
     }
 }

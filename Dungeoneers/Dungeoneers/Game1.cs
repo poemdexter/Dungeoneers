@@ -205,7 +205,7 @@ namespace Dungeoneers
             // draw ui stuff
             spriteBatch.DrawString(lofiFont, "poemdexter", new Vector2(24, 24), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.DrawString(lofiFont, "Bandit (1)", new Vector2(24, 44), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-            
+
             spriteBatch.DrawString(lofiFont, "EXP: 250/500", new Vector2(24, 84), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.Draw(spriteDict["ui_bar"], new Vector2(24, 99), spriteDict["ui_bar"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
             for (int x = 0; x < 10; x++)
@@ -249,7 +249,10 @@ namespace Dungeoneers
                 // left
                 if ((keyboard.IsKeyDown(Keys.NumPad4) || keyboard.IsKeyDown(Keys.H)) && dungeon.floor[x - 1][y] == 1)
                 {
-                    if (dungeon.manager.getDoor(new Vector2(x - 1, y)) != null)
+                    if (dungeon.manager.isMobAt(new Vector2(x - 1, y)))
+                        CombatManager.attack(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x - 1, y)));
+
+                    else if (dungeon.manager.getDoor(new Vector2(x - 1, y)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y));
                         if (!(door.GetComponent("Openable") as Openable).Opened)
@@ -275,7 +278,10 @@ namespace Dungeoneers
                 // right
                 else if ((keyboard.IsKeyDown(Keys.NumPad6) || keyboard.IsKeyDown(Keys.L)) && dungeon.floor[x + 1][y] == 1)
                 {
-                    if (dungeon.manager.getDoor(new Vector2(x + 1, y)) != null)
+                    if (dungeon.manager.isMobAt(new Vector2(x + 1, y)))
+                        CombatManager.attack(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x + 1, y)));
+
+                    else if (dungeon.manager.getDoor(new Vector2(x + 1, y)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y));
                         if (!(door.GetComponent("Openable") as Openable).Opened)
@@ -301,7 +307,10 @@ namespace Dungeoneers
                 // up
                 else if ((keyboard.IsKeyDown(Keys.NumPad8) || keyboard.IsKeyDown(Keys.K)) && dungeon.floor[x][y - 1] == 1)
                 {
-                    if (dungeon.manager.getDoor(new Vector2(x, y - 1)) != null)
+                    if (dungeon.manager.isMobAt(new Vector2(x, y - 1)))
+                        CombatManager.attack(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x, y - 1)));
+
+                    else if (dungeon.manager.getDoor(new Vector2(x, y - 1)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x, y - 1));
                         if (!(door.GetComponent("Openable") as Openable).Opened)
@@ -325,7 +334,10 @@ namespace Dungeoneers
                 // down
                 else if ((keyboard.IsKeyDown(Keys.NumPad2) || keyboard.IsKeyDown(Keys.J)) && dungeon.floor[x][y + 1] == 1)
                 {
-                    if (dungeon.manager.getDoor(new Vector2(x, y + 1)) != null)
+                    if (dungeon.manager.isMobAt(new Vector2(x, y + 1)))
+                        CombatManager.attack(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x, y + 1)));
+
+                    else if (dungeon.manager.getDoor(new Vector2(x, y + 1)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x, y + 1));
                         if (!(door.GetComponent("Openable") as Openable).Opened)
@@ -349,7 +361,10 @@ namespace Dungeoneers
                 // northwest
                 else if ((keyboard.IsKeyDown(Keys.NumPad7) || keyboard.IsKeyDown(Keys.Y)) && dungeon.floor[x - 1][y - 1] == 1)
                 {
-                    if (dungeon.manager.getDoor(new Vector2(x - 1, y - 1)) != null)
+                    if (dungeon.manager.isMobAt(new Vector2(x-1 , y - 1)))
+                        CombatManager.attack(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x-1, y - 1)));
+
+                    else if (dungeon.manager.getDoor(new Vector2(x - 1, y - 1)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y - 1));
                         if (!(door.GetComponent("Openable") as Openable).Opened)

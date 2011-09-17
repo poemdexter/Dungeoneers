@@ -69,21 +69,36 @@ namespace Dungeoneers.managers
             this.StairsDown = e;
         }
 
-        public void addMob(Component act, Component pos)
+        public void addMob(Entity mob)
         {
-            Entity skeleton = new Entity();
-            skeleton.AddComponent((Animation)act);
-            skeleton.AddComponent((Position)pos);
-            skeleton.AddAction(new ChangeAbsPosition());
-            skeleton.AddAction(new ChangeDirectionOfAnimation());
-            skeleton.AddAction(new MoveTowardsPlayer());
-
-            mobDict.Add(getNextKey(), skeleton);
+            mobDict.Add(getNextKey(), mob);
         }
 
         public List<Entity> getMobList()
         {
             return new List<Entity>(mobDict.Values);
+        }
+
+        public bool isMobAt(Vector2 pos)
+        {
+            foreach (Entity mob in getMobList())
+            {
+                Position position = mob.GetComponent("Position") as Position;
+                if (position.X == pos.X && position.Y == pos.Y)
+                    return true;
+            }
+            return false;
+        }
+
+        public Entity getMobAt(Vector2 pos)
+        {
+            foreach (Entity mob in getMobList())
+            {
+                Position position = mob.GetComponent("Position") as Position;
+                if (position.X == pos.X && position.Y == pos.Y)
+                    return mob;
+            }
+            return null;
         }
 
         public void addDoor(Entity door, Vector2 position)

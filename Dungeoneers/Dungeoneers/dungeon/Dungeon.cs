@@ -8,6 +8,7 @@ using Dungeoneers.entities.actions;
 using Microsoft.Xna.Framework;
 using Dungeoneers.framework;
 using Dungeoneers.managers;
+using Dungeoneers.entities.action_args;
 
 namespace Dungeoneers.dungeon
 {
@@ -73,12 +74,24 @@ namespace Dungeoneers.dungeon
 
         public void addMobs()
         {
-            Animation a = new Animation(SpriteDict["skeleton"], 1, false, SpriteEffects.None);
+            Entity skeleton = new Entity();
+            skeleton.AddComponent(new Animation(SpriteDict["skeleton"], 1, false, SpriteEffects.None));
             Rectangle room = roomList[random.Next(0, roomList.Count)];
             int x = random.Next(room.Left, room.Right);
             int y = random.Next(room.Top, room.Bottom);
-            Position p = new Position(x, y);
-            manager.addMob(a,p);
+            skeleton.AddComponent(new Position(x, y));
+            skeleton.AddComponent(new Equipment());
+            skeleton.AddAction(new EquipItem());
+            skeleton.AddComponent(new Hitpoints(50));
+            skeleton.AddAction(new TakeDamage());
+            skeleton.AddAction(new MoveTowardsPlayer());
+            skeleton.AddAction(new ChangeAbsPosition());
+
+            // temp weapon armor
+            skeleton.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true), (int)Slots.MainHand));
+            skeleton.DoAction("EquipItem", new EquipArmorArgs(new Armor(5), (int)Slots.Chest));
+
+            manager.addMob(skeleton);
         }
 
         public void addPlayer()
@@ -88,6 +101,15 @@ namespace Dungeoneers.dungeon
             player.AddComponent(new Animation(SpriteDict["bandit"], 1, false, SpriteEffects.None));
             player.AddAction(new ChangeDeltaPosition());
             player.AddAction(new ChangeDirectionOfAnimation());
+            player.AddComponent(new Equipment());
+            player.AddAction(new EquipItem());
+            player.AddComponent(new Hitpoints(50));
+            player.AddAction(new TakeDamage());
+
+            // temp weapon armor
+            player.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true), (int)Slots.MainHand));
+            player.DoAction("EquipItem", new EquipArmorArgs(new Armor(5), (int)Slots.Chest));
+
             manager.addPlayer(player);
         }
 

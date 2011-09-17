@@ -5,6 +5,11 @@ using System.Text;
 
 namespace Dungeoneers
 {
+    public static class Rand
+    {
+        public static Random random = new Random();
+    }
+
     public enum Tiles : int
     {
         Floor = 1,
