@@ -80,7 +80,7 @@ namespace Dungeoneers.dungeon
             skeleton.AddComponent(new Position(x, y));
             skeleton.AddComponent(new Equipment());
             skeleton.AddAction(new EquipItem());
-            skeleton.AddComponent(new Hitpoints(50));
+            skeleton.AddComponent(new Hitpoints(10));
             skeleton.AddAction(new TakeDamage());
             skeleton.AddAction(new MoveTowardsPlayer());
             skeleton.AddAction(new ChangeAbsPosition());

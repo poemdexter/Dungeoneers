@@ -170,12 +170,6 @@ namespace Dungeoneers
             sanimation = (Animation)dungeon.manager.StairsDown.GetComponent("Animation");
             spriteBatch.Draw(spriteDict["stairs_down"], new Vector2(sx * (scale * 8), sy * (scale * 8)), sanimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, sanimation.Effects, 0f);
 
-            // draw player
-            int px = (int)((Position)dungeon.manager.player.GetComponent("Position")).X;
-            int py = (int)((Position)dungeon.manager.player.GetComponent("Position")).Y;
-            Animation panimation = (Animation)dungeon.manager.player.GetComponent("Animation");
-            spriteBatch.Draw(panimation.SourceTexture, new Vector2(px * (scale * 8), py * (scale * 8)), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
-
             // draw mobs
             foreach (Entity skeleton in dungeon.manager.getMobList())
             {
@@ -191,11 +185,17 @@ namespace Dungeoneers
                     spriteBatch.Draw(spriteDict["item_skull"], new Vector2(mx * (scale * 8), my * (scale * 8)), spriteDict["item_skull"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None,0f);
                 }
             }
+
+            // draw player
+            int px = (int)((Position)dungeon.manager.player.GetComponent("Position")).X;
+            int py = (int)((Position)dungeon.manager.player.GetComponent("Position")).Y;
+            Animation panimation = (Animation)dungeon.manager.player.GetComponent("Animation");
+            spriteBatch.Draw(panimation.SourceTexture, new Vector2(px * (scale * 8), py * (scale * 8)), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
             spriteBatch.End();
 
             // draw version
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
-            spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.2a", new Vector2(0, leftViewport.Height - 15), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.3a", new Vector2(0, leftViewport.Height - 15), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.End();
 
             // right side of screen

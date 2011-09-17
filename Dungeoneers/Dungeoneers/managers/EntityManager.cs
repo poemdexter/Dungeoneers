@@ -51,7 +51,10 @@ namespace Dungeoneers.managers
             {
                 if (((Position)e.GetComponent("Position")).X == pos.X &&
                     ((Position)e.GetComponent("Position")).Y == pos.Y)
-                    return true;
+                {
+                    if (((Hitpoints)e.GetComponent("Hitpoints")).Alive)
+                        return true;
+                }
             }
             return false;
         }
