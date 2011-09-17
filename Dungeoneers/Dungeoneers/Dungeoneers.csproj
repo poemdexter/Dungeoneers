@@ -107,10 +107,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="entities\action args\DropLootArgs.cs" />
     <Compile Include="entities\action args\EquipArmorArgs.cs" />
     <Compile Include="entities\action args\EquipWeaponArgs.cs" />
     <Compile Include="entities\action args\GainExperienceArgs.cs" />
     <Compile Include="entities\action args\TakeDamageArgs.cs" />
+    <Compile Include="entities\actions\DropLoot.cs" />
     <Compile Include="entities\actions\EquipItem.cs" />
     <Compile Include="entities\actions\GainExperience.cs" />
     <Compile Include="entities\actions\TakeDamage.cs" />

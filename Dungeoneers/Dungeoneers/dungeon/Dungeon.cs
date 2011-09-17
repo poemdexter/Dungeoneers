@@ -85,6 +85,7 @@ namespace Dungeoneers.dungeon
             skeleton.AddAction(new MoveTowardsPlayer());
             skeleton.AddAction(new ChangeAbsPosition());
             skeleton.AddComponent(new LootTable(25));
+            skeleton.AddAction(new DropLoot());
 
             // temp weapon armor
             skeleton.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true, "dagger"), (int)Slots.MainHand));

@@ -15,6 +15,7 @@ namespace Dungeoneers.managers
     {
         private Dictionary<Vector2, Entity> doorDict;
         private Dictionary<int, Entity> mobDict;
+        public Dictionary<Vector2, List<Entity>> floorItems;
         private int key = 0;
         public Entity player { get; set; } // ID will be -1
         public Entity StairsUp { get; set; }
@@ -24,6 +25,7 @@ namespace Dungeoneers.managers
         {
             doorDict = new Dictionary<Vector2, Entity>();
             mobDict = new Dictionary<int, Entity>();
+            floorItems = new Dictionary<Vector2, List<Entity>>();
         }
 
         public int getNextKey()
@@ -48,6 +50,7 @@ namespace Dungeoneers.managers
                     // give exp
                     attacker.DoAction("GainExperience", new GainExperienceArgs((target.GetComponent("LootTable") as LootTable).ExpOnDeath));
                     // drop loot
+                    target.DoAction("DropLoot", new DropLootArgs(floorItems));
                 }
             }
         }
