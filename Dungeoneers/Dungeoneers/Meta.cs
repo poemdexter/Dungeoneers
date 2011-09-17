@@ -5,9 +5,10 @@ using System.Text;
 
 namespace Dungeoneers
 {
-    public static class Rand
+    public static class Meta
     {
         public static Random random = new Random();
+        //public static Random random = new Random(420);
     }
 
     public enum Tiles : int

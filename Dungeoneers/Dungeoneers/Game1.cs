@@ -63,13 +63,7 @@ namespace Dungeoneers
             leftViewport = new Viewport(0, 0, 960, 720);
             rightViewport = new Viewport(960, 0, 320, 720);
 
-
-            int seed = DateTime.Now.Millisecond;
-            //int seed = 203;
-
-            Console.WriteLine("current seed: " + seed);
-
-            dungeon = new Dungeon(seed, spriteDict);
+            dungeon = new Dungeon(spriteDict);
             dungeon.createDungeon();
             dungeon.addPlayer();
 
@@ -388,7 +382,10 @@ namespace Dungeoneers
                 // northeast
                 else if ((keyboard.IsKeyDown(Keys.NumPad9) || keyboard.IsKeyDown(Keys.U)) && dungeon.floor[x + 1][y - 1] == 1)
                 {
-                    if (dungeon.manager.getDoor(new Vector2(x + 1, y - 1)) != null)
+                    if (dungeon.manager.isMobAt(new Vector2(x + 1, y - 1)))
+                        CombatManager.attack(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x + 1, y - 1)));
+
+                    else if (dungeon.manager.getDoor(new Vector2(x + 1, y - 1)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y - 1));
                         if (!(door.GetComponent("Openable") as Openable).Opened)
@@ -412,7 +409,10 @@ namespace Dungeoneers
                 // southwest
                 else if ((keyboard.IsKeyDown(Keys.NumPad1) || keyboard.IsKeyDown(Keys.B)) && dungeon.floor[x - 1][y + 1] == 1)
                 {
-                    if (dungeon.manager.getDoor(new Vector2(x - 1, y + 1)) != null)
+                    if (dungeon.manager.isMobAt(new Vector2(x - 1, y + 1)))
+                        CombatManager.attack(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x - 1, y + 1)));
+
+                    else if (dungeon.manager.getDoor(new Vector2(x - 1, y + 1)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y + 1));
                         if (!(door.GetComponent("Openable") as Openable).Opened)
@@ -436,7 +436,10 @@ namespace Dungeoneers
                 // southeast
                 else if ((keyboard.IsKeyDown(Keys.NumPad3) || keyboard.IsKeyDown(Keys.N)) && dungeon.floor[x + 1][y + 1] == 1)
                 {
-                    if (dungeon.manager.getDoor(new Vector2(x + 1, y + 1)) != null)
+                    if (dungeon.manager.isMobAt(new Vector2(x + 1, y + 1)))
+                        CombatManager.attack(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x + 1, y + 1)));
+
+                    else if (dungeon.manager.getDoor(new Vector2(x + 1, y + 1)) != null)
                     {
                         Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y + 1));
                         if (!(door.GetComponent("Openable") as Openable).Opened)

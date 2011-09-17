@@ -16,14 +16,12 @@ namespace Dungeoneers.dungeon
         private int splitPos; // left (x) top (y) corner
         private Node leftChild, rightChild;
         private List<Rectangle> leftR, rightR;
-        private Random random;
         private string split_dir;
         private Rectangle Rect, roomRect;
         private bool roomBuilt;
 
-        public Node(int left, int top, int width, int height, Random random)
+        public Node(int left, int top, int width, int height)
         {
-            this.random = random;
             this.roomBuilt = false;
             this.Rect = new Rectangle(left, top, width, height);
         }
@@ -31,7 +29,7 @@ namespace Dungeoneers.dungeon
         // high homo == sameness in rooms
         private double HomogenizedRandomValue()
         {
-            return 0.5 - (random.NextDouble() * homogeneityFactor);
+            return 0.5 - (Meta.random.NextDouble() * homogeneityFactor);
         }
 
         // see if child should split with small chance we won't split if decent just cuz
@@ -54,7 +52,7 @@ namespace Dungeoneers.dungeon
             {
                 split_dir = "horiz";
             }
-            else split_dir = (random.Next(2) == 1) ? "vert" : "horiz";
+            else split_dir = (Meta.random.Next(2) == 1) ? "vert" : "horiz";
 
             // split the node
             if (split_dir == "vert")
@@ -63,8 +61,8 @@ namespace Dungeoneers.dungeon
                 splitPos = Rect.Left + (int)(HomogenizedRandomValue() * Rect.Width);
 
                 // create kiddos
-                leftChild = new Node(Rect.Left, Rect.Top, splitPos - Rect.Left, Rect.Height, random);
-                rightChild = new Node(splitPos + 1, Rect.Top, Rect.Left + Rect.Width - splitPos - 1, Rect.Height, random);
+                leftChild = new Node(Rect.Left, Rect.Top, splitPos - Rect.Left, Rect.Height);
+                rightChild = new Node(splitPos + 1, Rect.Top, Rect.Left + Rect.Width - splitPos - 1, Rect.Height);
 
                 // if not too small, split
                 if (leftChild.shouldSplit(leftChild.Rect.Width))
@@ -77,8 +75,8 @@ namespace Dungeoneers.dungeon
             {
                 splitPos = Rect.Top + (int)(HomogenizedRandomValue() * Rect.Height);
 
-                leftChild = new Node(Rect.Left, Rect.Top, Rect.Width, splitPos - Rect.Top, random);
-                rightChild = new Node(Rect.Left, splitPos + 1, Rect.Width, Rect.Top + Rect.Height - splitPos - 1, random);
+                leftChild = new Node(Rect.Left, Rect.Top, Rect.Width, splitPos - Rect.Top);
+                rightChild = new Node(Rect.Left, splitPos + 1, Rect.Width, Rect.Top + Rect.Height - splitPos - 1);
 
                 if (leftChild.shouldSplit(leftChild.Rect.Height))
                     leftChild.split(dungeon);
@@ -104,10 +102,10 @@ namespace Dungeoneers.dungeon
             }
             else // hit a leaf, make a room
             {
-                int roomWidth = random.Next(Math.Min(ideal_room_size, Rect.Width), Math.Min(max_room_size, Rect.Width));
-                int roomHeight = random.Next(Math.Min(ideal_room_size, Rect.Height), Math.Min(max_room_size, Rect.Height));
-                int roomLeft = Rect.Left + (random.Next(Rect.Width - roomWidth));
-                int roomTop = Rect.Top + (random.Next(Rect.Height - roomHeight));
+                int roomWidth = Meta.random.Next(Math.Min(ideal_room_size, Rect.Width), Math.Min(max_room_size, Rect.Width));
+                int roomHeight = Meta.random.Next(Math.Min(ideal_room_size, Rect.Height), Math.Min(max_room_size, Rect.Height));
+                int roomLeft = Rect.Left + (Meta.random.Next(Rect.Width - roomWidth));
+                int roomTop = Rect.Top + (Meta.random.Next(Rect.Height - roomHeight));
 
                 roomRect = new Rectangle(roomLeft, roomTop, roomWidth, roomHeight);
                 roomBuilt = true;
@@ -177,8 +175,8 @@ namespace Dungeoneers.dungeon
 
                             if (maxOverlappingY - minOverlappingY >= 3) // we can draw straight hall
                             {
-                                // determine range of Y axis values we can use to dig and randomly pick one
-                                int hallY = minOverlappingY + 1 + random.Next(maxOverlappingY - minOverlappingY - 2);
+                                // determine range of Y axis values we can use to dig and Meta.randomly pick one
+                                int hallY = minOverlappingY + 1 + Meta.random.Next(maxOverlappingY - minOverlappingY - 2);
 
                                 // start in middle of two leaves and go left and right until we hit another floor block
                                 int a = 0;
@@ -218,8 +216,8 @@ namespace Dungeoneers.dungeon
 
                             if (maxOverlappingX - minOverlappingX >= 3) // we can draw straight hall
                             {
-                                // determine range of X axis values we can use to dig and randomly pick one
-                                int hallX = minOverlappingX + 1 + random.Next(maxOverlappingX - minOverlappingX - 2);
+                                // determine range of X axis values we can use to dig and Meta.randomly pick one
+                                int hallX = minOverlappingX + 1 + Meta.random.Next(maxOverlappingX - minOverlappingX - 2);
 
                                 // start in middle of two leaves and go up and down until we hit another floor block
                                 int a = 0;
@@ -315,8 +313,8 @@ namespace Dungeoneers.dungeon
                     //  |   |   |
                     //  | R |___|X
                     //  |___|
-                    meetX = random.Next(Math.Max(tempR.roomRect.Right + 1, tempL.roomRect.Left), tempL.roomRect.Right);
-                    meetY = random.Next(Math.Max(tempL.roomRect.Bottom + 1, tempR.roomRect.Top + 1), tempR.roomRect.Bottom);
+                    meetX = Meta.random.Next(Math.Max(tempR.roomRect.Right + 1, tempL.roomRect.Left), tempL.roomRect.Right);
+                    meetY = Meta.random.Next(Math.Max(tempL.roomRect.Bottom + 1, tempR.roomRect.Top + 1), tempR.roomRect.Bottom);
 
                     dungeon[meetX][meetY] = 1;
 
@@ -356,8 +354,8 @@ namespace Dungeoneers.dungeon
                     //      |    |   |
                     //     X|____| R |
                     //           |___|
-                    meetX = random.Next(tempL.roomRect.Left + 1, Math.Min(tempL.roomRect.Right, tempR.roomRect.Left - 1));
-                    meetY = random.Next(Math.Max(tempL.roomRect.Bottom + 1, tempR.roomRect.Top + 1), tempR.roomRect.Bottom);
+                    meetX = Meta.random.Next(tempL.roomRect.Left + 1, Math.Min(tempL.roomRect.Right, tempR.roomRect.Left - 1));
+                    meetY = Meta.random.Next(Math.Max(tempL.roomRect.Bottom + 1, tempR.roomRect.Top + 1), tempR.roomRect.Bottom);
 
                     dungeon[meetX][meetY] = 1;
 
@@ -400,8 +398,8 @@ namespace Dungeoneers.dungeon
                     //  |   |
                     //  | R |
                     //  |___|
-                    meetX = random.Next(tempR.roomRect.Left + 1, Math.Min(tempR.roomRect.Right - 1, tempL.roomRect.Left));
-                    meetY = random.Next(tempL.roomRect.Top + 1, tempL.roomRect.Bottom);
+                    meetX = Meta.random.Next(tempR.roomRect.Left + 1, Math.Min(tempR.roomRect.Right - 1, tempL.roomRect.Left));
+                    meetY = Meta.random.Next(tempL.roomRect.Top + 1, tempL.roomRect.Bottom);
 
                     dungeon[meetX][meetY] = 1;
 
@@ -441,8 +439,8 @@ namespace Dungeoneers.dungeon
                     //          |   |
                     //          | R |
                     //          |___|
-                    meetX = random.Next(tempR.roomRect.Left + 1, tempR.roomRect.Right);
-                    meetY = random.Next(tempL.roomRect.Top + 1, Math.Min(tempL.roomRect.Bottom - 1, tempR.roomRect.Top));
+                    meetX = Meta.random.Next(tempR.roomRect.Left + 1, tempR.roomRect.Right);
+                    meetY = Meta.random.Next(tempL.roomRect.Top + 1, Math.Min(tempL.roomRect.Bottom - 1, tempR.roomRect.Top));
 
                     dungeon[meetX][meetY] = 1;
 

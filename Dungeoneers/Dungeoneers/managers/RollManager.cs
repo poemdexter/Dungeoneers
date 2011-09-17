@@ -9,11 +9,10 @@ namespace Dungeoneers.managers
     {
         public static int roll(int dNum, int dSide, int mod)
         {
-            Random random = new Random();
             int total = 0;
             for (int x = 1; x <= dNum; x++)
             {
-                total += random.Next(1, dSide + 1);
+                total += Meta.random.Next(1, dSide + 1);
             }
             total += mod;
             return total;

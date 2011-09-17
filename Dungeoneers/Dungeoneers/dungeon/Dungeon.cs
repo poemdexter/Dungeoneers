@@ -15,7 +15,6 @@ namespace Dungeoneers.dungeon
     class Dungeon
     {
         public int[][] floor { get; set; }
-        private Random random { get; set; }
         public List<Entity> torchList;
         public List<Rectangle> roomList;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
@@ -24,9 +23,8 @@ namespace Dungeoneers.dungeon
 
         public EntityManager manager;
 
-        public Dungeon(int seed, Dictionary<string, Texture2D> spriteDict)
+        public Dungeon(Dictionary<string, Texture2D> spriteDict)
         {
-            this.random = new Random(seed);
             this.SpriteDict = spriteDict;
         }
 
@@ -52,7 +50,7 @@ namespace Dungeoneers.dungeon
             }
 
             // start with single node then recursively split into areas until done
-            Node wholeDungeon = new Node(1, 1, dwidth - 2, dheight - 2, random);
+            Node wholeDungeon = new Node(1, 1, dwidth - 2, dheight - 2);
             wholeDungeon.split(floor);
             // now add rooms
             roomList = wholeDungeon.addRooms(floor);
@@ -76,9 +74,9 @@ namespace Dungeoneers.dungeon
         {
             Entity skeleton = new Entity();
             skeleton.AddComponent(new Animation(SpriteDict["skeleton"], 1, false, SpriteEffects.None));
-            Rectangle room = roomList[random.Next(0, roomList.Count)];
-            int x = random.Next(room.Left, room.Right);
-            int y = random.Next(room.Top, room.Bottom);
+            Rectangle room = roomList[Meta.random.Next(0, roomList.Count)];
+            int x = Meta.random.Next(room.Left, room.Right);
+            int y = Meta.random.Next(room.Top, room.Bottom);
             skeleton.AddComponent(new Position(x, y));
             skeleton.AddComponent(new Equipment());
             skeleton.AddAction(new EquipItem());
@@ -118,16 +116,16 @@ namespace Dungeoneers.dungeon
         {
             Entity StairsUp = new Entity();
             StairsUp.AddComponent(new Animation(SpriteDict["stairs_up"], 1, false, SpriteEffects.None));
-            Rectangle room = roomList[random.Next(0, roomList.Count)];
-            int x = random.Next(room.Left, room.Right);
-            int y = random.Next(room.Top, room.Bottom);
+            Rectangle room = roomList[Meta.random.Next(0, roomList.Count)];
+            int x = Meta.random.Next(room.Left, room.Right);
+            int y = Meta.random.Next(room.Top, room.Bottom);
             StairsUp.AddComponent(new Position(x, y));
 
             Entity StairsDown = new Entity();
             StairsDown.AddComponent(new Animation(SpriteDict["stairs_down"], 1, false, SpriteEffects.None));
-            Rectangle room1 = roomList[random.Next(0, roomList.Count)];
-            int x1 = random.Next(room1.Left, room1.Right);
-            int y1 = random.Next(room1.Top, room1.Bottom);
+            Rectangle room1 = roomList[Meta.random.Next(0, roomList.Count)];
+            int x1 = Meta.random.Next(room1.Left, room1.Right);
+            int y1 = Meta.random.Next(room1.Top, room1.Bottom);
             StairsDown.AddComponent(new Position(x1, y1));
 
             manager.addStairsUp(StairsUp);
@@ -238,7 +236,7 @@ namespace Dungeoneers.dungeon
             return ret;
         }
 
-        // randomly add torches to the exposed walls
+        // Meta.randomly add torches to the exposed walls
         public void addTorches()
         {
             for (int x = 0; x < floor.Length; x++)
@@ -249,7 +247,7 @@ namespace Dungeoneers.dungeon
                     if (floor[x][y] == 2 &&
                         (floor[x - 1][y] == 2 || floor[x - 1][y] == 3) &&
                         (floor[x + 1][y] == 2 || floor[x + 1][y] == 3) &&
-                        random.Next(100) < 15)
+                        Meta.random.Next(100) < 15)
                     {
                         // create torch entity
                         Entity wallTorch = new Entity();
