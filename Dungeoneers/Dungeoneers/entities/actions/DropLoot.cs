@@ -26,6 +26,8 @@ namespace Dungeoneers.entities.actions
 
                 // get items from lootTable and place them into floor
                 List<Entity> loot = LootManager.getLootDrop(((Experience)this.Entity.GetComponent("Experience")).Current_Level, lootTable.Affinity);
+                Position pos = (Position)this.Entity.GetComponent("Position");
+                floor.Add(new Vector2(pos.X, pos.Y), loot);
             }
         }
     }

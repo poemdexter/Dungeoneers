@@ -193,9 +193,16 @@ namespace Dungeoneers
             spriteBatch.Draw(panimation.SourceTexture, new Vector2(px * (scale * 8), py * (scale * 8)), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
             spriteBatch.End();
 
-            // draw version
+            
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            
+            // draw version
             spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.3a", new Vector2(0, leftViewport.Height - 15), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+           
+            // draw messages
+            spriteBatch.DrawString(lofiFont, "The player is gay.", new Vector2(2, 2), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "The player is not gay.", new Vector2(2, 17), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+
             spriteBatch.End();
 
             // right side of screen

@@ -148,6 +148,7 @@
     <Compile Include="framework\Component.cs" />
     <Compile Include="framework\Entity.cs" />
     <Compile Include="managers\LootManager.cs" />
+    <Compile Include="managers\MessageManager.cs" />
     <Compile Include="managers\RollManager.cs" />
     <Compile Include="Meta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

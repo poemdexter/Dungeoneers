@@ -17,8 +17,9 @@ namespace Dungeoneers.managers
             {
                 case LootAffinity.Standard:
                     int y = Meta.random.Next(1, 4);
-                    // TODO Make weapons and armor an entity
-                    // drops.Add(Weapons[y]);
+                    Entity e = new Entity();
+                    e.AddComponent(Weapons[y]);
+                    drops.Add(e);
                     break;
                 case LootAffinity.Fighter:
                     break;
@@ -27,7 +28,6 @@ namespace Dungeoneers.managers
                 case LootAffinity.Magical:
                     break;
             }
-
             return drops;
         }
 
