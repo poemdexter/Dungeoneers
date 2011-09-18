@@ -115,6 +115,7 @@
     <Compile Include="entities\actions\DropLoot.cs" />
     <Compile Include="entities\actions\EquipItem.cs" />
     <Compile Include="entities\actions\GainExperience.cs" />
+    <Compile Include="entities\actions\LevelUp.cs" />
     <Compile Include="entities\actions\TakeDamage.cs" />
     <Compile Include="entities\components\Armor.cs" />
     <Compile Include="entities\components\Equipment.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="framework\ActionArgs.cs" />
     <Compile Include="framework\Component.cs" />
     <Compile Include="framework\Entity.cs" />
+    <Compile Include="managers\LootManager.cs" />
     <Compile Include="managers\RollManager.cs" />
     <Compile Include="Meta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

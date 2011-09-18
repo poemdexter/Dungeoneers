@@ -209,13 +209,14 @@ namespace Dungeoneers
             // draw ui stuff
             Entity player = dungeon.manager.player;
 
-            spriteBatch.DrawString(lofiFont, "poemdexter", new Vector2(24, 24), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-            spriteBatch.DrawString(lofiFont, "Class Name (0)", new Vector2(24, 44), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-
             Experience exp = player.GetComponent("Experience") as Experience;
-            spriteBatch.DrawString(lofiFont, "EXP: " + exp.Current_EXP + "/" + exp.Next_Level, new Vector2(24, 84), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "poemdexter", new Vector2(24, 24), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(lofiFont, "Class Name (" + exp.Current_Level + ")", new Vector2(24, 44), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+
+            
+            spriteBatch.DrawString(lofiFont, "EXP: " + exp.Current_EXP + "/" + Meta.ExpLevel[exp.Current_Level], new Vector2(24, 84), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.Draw(spriteDict["ui_bar"], new Vector2(24, 99), spriteDict["ui_bar"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
-            int exp_ctr = (int)Math.Ceiling(((double)exp.Current_EXP / (double)exp.Next_Level) * 20);
+            int exp_ctr = (int)Math.Ceiling(((double)exp.Current_EXP / (double)Meta.ExpLevel[exp.Current_Level]) * 20);
             for (int x = 0; x < exp_ctr; x++)
             {
                 spriteBatch.Draw(spriteDict["ui_barpiece_exp"], new Vector2(28 + (8 * x), 99), spriteDict["ui_barpiece_exp"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);

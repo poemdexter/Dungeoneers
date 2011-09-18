@@ -9,11 +9,13 @@ namespace Dungeoneers.entities.components
     class Armor : Component
     {
         public int DmgReduction { get; set; }
+        public string ArmorName { get; set; }
 
-        public Armor(int value)
+        public Armor(int value, string name)
         {
             this.Name = "Armor";
             this.DmgReduction = value;
+            this.ArmorName = name;
         }
     }
 }

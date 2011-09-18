@@ -9,11 +9,13 @@ namespace Dungeoneers.entities.components
     class LootTable : Component
     {
         public int ExpOnDeath { get; set; }
+        public LootAffinity Affinity { get; set; }
 
-        public LootTable(int exp)
+        public LootTable(int exp, LootAffinity affinity)
         {
             this.Name = "LootTable";
-            this.ExpOnDeath = exp; 
+            this.ExpOnDeath = exp;
+            this.Affinity = affinity;
         }
     }
 }

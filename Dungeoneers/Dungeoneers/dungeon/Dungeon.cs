@@ -72,26 +72,29 @@ namespace Dungeoneers.dungeon
 
         public void addMobs()
         {
-            Entity skeleton = new Entity();
-            skeleton.AddComponent(new Animation(SpriteDict["skeleton"], 1, false, SpriteEffects.None));
-            Rectangle room = roomList[Meta.random.Next(0, roomList.Count)];
-            int x = Meta.random.Next(room.Left, room.Right);
-            int y = Meta.random.Next(room.Top, room.Bottom);
-            skeleton.AddComponent(new Position(x, y));
-            skeleton.AddComponent(new Equipment());
-            skeleton.AddAction(new EquipItem());
-            skeleton.AddComponent(new Hitpoints(10));
-            skeleton.AddAction(new TakeDamage());
-            skeleton.AddAction(new MoveTowardsPlayer());
-            skeleton.AddAction(new ChangeAbsPosition());
-            skeleton.AddComponent(new LootTable(25));
-            skeleton.AddAction(new DropLoot());
+            foreach (Rectangle room in roomList)
+            {
+                Entity skeleton = new Entity();
+                skeleton.AddComponent(new Animation(SpriteDict["skeleton"], 1, false, SpriteEffects.None));
+                int x = Meta.random.Next(room.Left, room.Right);
+                int y = Meta.random.Next(room.Top, room.Bottom);
+                skeleton.AddComponent(new Position(x, y));
+                skeleton.AddComponent(new Equipment());
+                skeleton.AddAction(new EquipItem());
+                skeleton.AddComponent(new Hitpoints(10));
+                skeleton.AddAction(new TakeDamage());
+                skeleton.AddAction(new MoveTowardsPlayer());
+                skeleton.AddAction(new ChangeAbsPosition());
+                skeleton.AddComponent(new LootTable(25, LootAffinity.Standard));
+                skeleton.AddComponent(new Experience(1,0));
+                skeleton.AddAction(new DropLoot());
 
-            // temp weapon armor
-            skeleton.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true, "dagger"), (int)Slots.MainHand));
-            skeleton.DoAction("EquipItem", new EquipArmorArgs(new Armor(5), (int)Slots.Chest));
+                // temp weapon armor
+                skeleton.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 6, 0, true, "dagger"), (int)Slots.MainHand));
+                skeleton.DoAction("EquipItem", new EquipArmorArgs(new Armor(5, "chainmail"), (int)Slots.Chest));
 
-            manager.addMob(skeleton);
+                manager.addMob(skeleton);
+            }
         }
 
         public void addPlayer()
@@ -106,12 +109,13 @@ namespace Dungeoneers.dungeon
             player.AddComponent(new Hitpoints(50));
             player.AddAction(new TakeDamage());
             player.AddComponent(new Mana(20));
-            player.AddComponent(new Experience(500));
+            player.AddComponent(new Experience(1,0));
             player.AddAction(new GainExperience());
+            player.AddAction(new LevelUp());
 
             // temp weapon armor
             player.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true, "dagger"), (int)Slots.MainHand));
-            player.DoAction("EquipItem", new EquipArmorArgs(new Armor(5), (int)Slots.Chest));
+            player.DoAction("EquipItem", new EquipArmorArgs(new Armor(5, "chainmail"), (int)Slots.Chest));
 
             manager.addPlayer(player);
         }

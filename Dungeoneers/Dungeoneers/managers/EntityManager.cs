@@ -28,13 +28,6 @@ namespace Dungeoneers.managers
             floorItems = new Dictionary<Vector2, List<Entity>>();
         }
 
-        public int getNextKey()
-        {
-            int temp = key;
-            key++;
-            return temp;
-        }
-
         public void attackPhase(Entity attacker, Entity target)
         {
             CombatManager.attack(attacker, target);
@@ -116,7 +109,8 @@ namespace Dungeoneers.managers
 
         public void addMob(Entity mob)
         {
-            mobDict.Add(getNextKey(), mob);
+            mob.Id = key++;
+            mobDict.Add(mob.Id, mob);
         }
 
         public List<Entity> getMobList()
