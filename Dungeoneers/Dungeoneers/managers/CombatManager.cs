@@ -18,18 +18,23 @@ namespace Dungeoneers.managers
             Armor armor = ((Equipment)target.GetComponent("Equipment")).Chest;
 
             int damage = predamage - armor.DmgReduction;
-            // reduce hp
+            // reduce hp and shoot messages
+
+            Information targetInfo = target.GetComponent("Information") as Information;
+            Information attackerInfo = attacker.GetComponent("Information") as Information;
+
             if (damage > 0)
             {
                 target.DoAction("TakeDamage", new TakeDamageArgs(damage));
-
-                Console.WriteLine("swung for {0}, hit for {1}.", predamage, damage);
-                Console.WriteLine("entity has {0} HP left.", ((Hitpoints)target.GetComponent("Hitpoints")).Current_HP);
+                string message = String.Format("{0} swings at {1} for {2} damage.", attackerInfo.Username, targetInfo.Username, damage);
+                MessageManager.Instance.addMessage(message);
+                if (!((Hitpoints)target.GetComponent("Hitpoints")).Alive)
+                    MessageManager.Instance.addMessage(String.Format("{0} dies!", (target.GetComponent("Information") as Information).Username));
             }
             else 
             {
-                Console.WriteLine("swung for {0} but glanced", predamage);
-                Console.WriteLine("entity has {0} HP left.", ((Hitpoints)target.GetComponent("Hitpoints")).Current_HP);
+                string message = String.Format("{0} attacks {1}, but it glances off.", attackerInfo.Username, targetInfo.Username, damage);
+                MessageManager.Instance.addMessage(message);
             }
         }
     }

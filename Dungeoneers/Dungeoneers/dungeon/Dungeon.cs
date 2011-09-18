@@ -88,6 +88,7 @@ namespace Dungeoneers.dungeon
                 skeleton.AddComponent(new LootTable(25, LootAffinity.Standard));
                 skeleton.AddComponent(new Experience(1,0));
                 skeleton.AddAction(new DropLoot());
+                skeleton.AddComponent(new Information("skeleton"));
 
                 // temp weapon armor
                 skeleton.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 6, 0, true, "dagger"), (int)Slots.MainHand));
@@ -112,6 +113,7 @@ namespace Dungeoneers.dungeon
             player.AddComponent(new Experience(1,0));
             player.AddAction(new GainExperience());
             player.AddAction(new LevelUp());
+            player.AddComponent(new Information("poemdexter"));
 
             // temp weapon armor
             player.DoAction("EquipItem", new EquipWeaponArgs(new Weapon(1, 10, 0, true, "dagger"), (int)Slots.MainHand));

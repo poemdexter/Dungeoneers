@@ -140,7 +140,7 @@
     <Compile Include="entities\components\Mana.cs" />
     <Compile Include="entities\components\Openable.cs" />
     <Compile Include="entities\components\Player_Class.cs" />
-    <Compile Include="entities\components\Player_Info.cs" />
+    <Compile Include="entities\components\Information.cs" />
     <Compile Include="entities\components\Position.cs" />
     <Compile Include="managers\EntityManager.cs" />
     <Compile Include="framework\Action.cs" />

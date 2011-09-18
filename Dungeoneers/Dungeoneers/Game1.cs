@@ -19,6 +19,7 @@ namespace Dungeoneers
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
+        MessageManager messager;
         SpriteBatch spriteBatch;
         SpriteFont lofiFont;
 
@@ -91,6 +92,10 @@ namespace Dungeoneers
                     torch_elapsedTime = 0;
                 }
             }
+
+            // update messages
+            messager = MessageManager.Instance;
+            messager.updateQueue(gameTime.ElapsedGameTime.Milliseconds);
 
             // player can act
             playerActed = false;
@@ -182,7 +187,7 @@ namespace Dungeoneers
                 }
                 else
                 {
-                    spriteBatch.Draw(spriteDict["item_skull"], new Vector2(mx * (scale * 8), my * (scale * 8)), spriteDict["item_skull"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None,0f);
+                    spriteBatch.Draw(spriteDict["item_skull"], new Vector2(mx * (scale * 8), my * (scale * 8)), spriteDict["item_skull"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
                 }
             }
 
@@ -193,15 +198,18 @@ namespace Dungeoneers
             spriteBatch.Draw(panimation.SourceTexture, new Vector2(px * (scale * 8), py * (scale * 8)), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
             spriteBatch.End();
 
-            
+
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
-            
+
             // draw version
             spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.3a", new Vector2(0, leftViewport.Height - 15), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-           
+
             // draw messages
-            spriteBatch.DrawString(lofiFont, "The player is gay.", new Vector2(2, 2), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
-            spriteBatch.DrawString(lofiFont, "The player is not gay.", new Vector2(2, 17), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            Message[] msgList = MessageManager.Instance.getMessageQueueCopy();
+            for (int x = 0; x < msgList.Length; x++)
+            {
+                spriteBatch.DrawString(lofiFont, msgList[x].Msg, new Vector2(2, (x * 15) + 2), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+            }
 
             spriteBatch.End();
 
@@ -220,7 +228,7 @@ namespace Dungeoneers
             spriteBatch.DrawString(lofiFont, "poemdexter", new Vector2(24, 24), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.DrawString(lofiFont, "Class Name (" + exp.Current_Level + ")", new Vector2(24, 44), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
 
-            
+
             spriteBatch.DrawString(lofiFont, "EXP: " + exp.Current_EXP + "/" + Meta.ExpLevel[exp.Current_Level], new Vector2(24, 84), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.Draw(spriteDict["ui_bar"], new Vector2(24, 99), spriteDict["ui_bar"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
             int exp_ctr = (int)Math.Ceiling(((double)exp.Current_EXP / (double)Meta.ExpLevel[exp.Current_Level]) * 20);
@@ -276,7 +284,7 @@ namespace Dungeoneers
                 {
                     if (dungeon.manager.isMobAt(new Vector2(x - 1, y)) && dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y)))
                         dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x - 1, y)));
-                        
+
 
                     else if (dungeon.manager.getDoor(new Vector2(x - 1, y)) != null)
                     {
@@ -333,7 +341,7 @@ namespace Dungeoneers
                 // up
                 else if ((keyboard.IsKeyDown(Keys.NumPad8) || keyboard.IsKeyDown(Keys.K)) && dungeon.floor[x][y - 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x, y - 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x, y-1)))
+                    if (dungeon.manager.isMobAt(new Vector2(x, y - 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x, y - 1)))
                         dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x, y - 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x, y - 1)) != null)
@@ -360,7 +368,7 @@ namespace Dungeoneers
                 // down
                 else if ((keyboard.IsKeyDown(Keys.NumPad2) || keyboard.IsKeyDown(Keys.J)) && dungeon.floor[x][y + 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x, y + 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x, y+1)))
+                    if (dungeon.manager.isMobAt(new Vector2(x, y + 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x, y + 1)))
                         dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x, y + 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x, y + 1)) != null)
@@ -387,7 +395,7 @@ namespace Dungeoneers
                 // northwest
                 else if ((keyboard.IsKeyDown(Keys.NumPad7) || keyboard.IsKeyDown(Keys.Y)) && dungeon.floor[x - 1][y - 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x - 1, y - 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y-1)))
+                    if (dungeon.manager.isMobAt(new Vector2(x - 1, y - 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y - 1)))
                         dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x - 1, y - 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x - 1, y - 1)) != null)
@@ -414,7 +422,7 @@ namespace Dungeoneers
                 // northeast
                 else if ((keyboard.IsKeyDown(Keys.NumPad9) || keyboard.IsKeyDown(Keys.U)) && dungeon.floor[x + 1][y - 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x + 1, y - 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x +1, y-1)))
+                    if (dungeon.manager.isMobAt(new Vector2(x + 1, y - 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y - 1)))
                         dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x + 1, y - 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x + 1, y - 1)) != null)
@@ -441,7 +449,7 @@ namespace Dungeoneers
                 // southwest
                 else if ((keyboard.IsKeyDown(Keys.NumPad1) || keyboard.IsKeyDown(Keys.B)) && dungeon.floor[x - 1][y + 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x - 1, y + 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x -1, y+1)))
+                    if (dungeon.manager.isMobAt(new Vector2(x - 1, y + 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y + 1)))
                         dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x - 1, y + 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x - 1, y + 1)) != null)
@@ -468,7 +476,7 @@ namespace Dungeoneers
                 // southeast
                 else if ((keyboard.IsKeyDown(Keys.NumPad3) || keyboard.IsKeyDown(Keys.N)) && dungeon.floor[x + 1][y + 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x + 1, y + 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y+1)))
+                    if (dungeon.manager.isMobAt(new Vector2(x + 1, y + 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y + 1)))
                         dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x + 1, y + 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x + 1, y + 1)) != null)

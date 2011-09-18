@@ -5,6 +5,7 @@ using System.Text;
 using Dungeoneers.framework;
 using Dungeoneers.entities.action_args;
 using Dungeoneers.entities.components;
+using Dungeoneers.managers;
 
 namespace Dungeoneers.entities.actions
 {
@@ -24,7 +25,9 @@ namespace Dungeoneers.entities.actions
                 {
                     hitpoints.Current_HP -= ((TakeDamageArgs)args).Damage;
                     if (hitpoints.Current_HP <= 0)
+                    {
                         hitpoints.Alive = false;
+                    }
                 }
             }
         }
