@@ -14,6 +14,7 @@ namespace Dungeoneers
 
         public static Dictionary<int, int> ExpLevel = new Dictionary<int, int>
         {
+            {0,0},
             {1,100},
             {2,300},
             {3,600},

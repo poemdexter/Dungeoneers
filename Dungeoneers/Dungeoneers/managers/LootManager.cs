@@ -31,6 +31,17 @@ namespace Dungeoneers.managers
             return drops;
         }
 
+        public static void addLootToFloor(Dictionary<Vector2, List<Entity>> floor, List<Entity> loot, Vector2 position)
+        {
+            // loot on floor already, just add more
+            if (floor.ContainsKey(position))
+            {
+                floor[position].AddRange(loot);
+            }
+            else
+                floor.Add(position, loot);
+        }
+
         public static Dictionary<int, Weapon> Weapons = new Dictionary<int, Weapon>
         {
             {1, new Weapon(1,4,0,true,"dagger")},

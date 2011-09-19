@@ -231,7 +231,7 @@ namespace Dungeoneers
 
             spriteBatch.DrawString(lofiFont, "EXP: " + exp.Current_EXP + "/" + Meta.ExpLevel[exp.Current_Level], new Vector2(24, 84), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.Draw(spriteDict["ui_bar"], new Vector2(24, 99), spriteDict["ui_bar"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
-            int exp_ctr = (int)Math.Ceiling(((double)exp.Current_EXP / (double)Meta.ExpLevel[exp.Current_Level]) * 20);
+            int exp_ctr = (int)Math.Ceiling(((double)exp.Current_LevelEXP / (double)(Meta.ExpLevel[exp.Current_Level] - Meta.ExpLevel[exp.Current_Level -1])) * 20);
             for (int x = 0; x < exp_ctr; x++)
             {
                 spriteBatch.Draw(spriteDict["ui_barpiece_exp"], new Vector2(28 + (8 * x), 99), spriteDict["ui_barpiece_exp"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
@@ -282,8 +282,8 @@ namespace Dungeoneers
                 // left
                 if ((keyboard.IsKeyDown(Keys.NumPad4) || keyboard.IsKeyDown(Keys.H)) && dungeon.floor[x - 1][y] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x - 1, y)) && dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x - 1, y)));
+                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y)))
+                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x - 1, y)));
 
 
                     else if (dungeon.manager.getDoor(new Vector2(x - 1, y)) != null)
@@ -312,8 +312,8 @@ namespace Dungeoneers
                 // right
                 else if ((keyboard.IsKeyDown(Keys.NumPad6) || keyboard.IsKeyDown(Keys.L)) && dungeon.floor[x + 1][y] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x + 1, y)) && dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x + 1, y)));
+                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y)))
+                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x + 1, y)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x + 1, y)) != null)
                     {
@@ -341,8 +341,8 @@ namespace Dungeoneers
                 // up
                 else if ((keyboard.IsKeyDown(Keys.NumPad8) || keyboard.IsKeyDown(Keys.K)) && dungeon.floor[x][y - 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x, y - 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x, y - 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x, y - 1)));
+                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x, y - 1)))
+                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x, y - 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x, y - 1)) != null)
                     {
@@ -368,8 +368,8 @@ namespace Dungeoneers
                 // down
                 else if ((keyboard.IsKeyDown(Keys.NumPad2) || keyboard.IsKeyDown(Keys.J)) && dungeon.floor[x][y + 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x, y + 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x, y + 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x, y + 1)));
+                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x, y + 1)))
+                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x, y + 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x, y + 1)) != null)
                     {
@@ -395,8 +395,8 @@ namespace Dungeoneers
                 // northwest
                 else if ((keyboard.IsKeyDown(Keys.NumPad7) || keyboard.IsKeyDown(Keys.Y)) && dungeon.floor[x - 1][y - 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x - 1, y - 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y - 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x - 1, y - 1)));
+                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y - 1)))
+                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x - 1, y - 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x - 1, y - 1)) != null)
                     {
@@ -422,8 +422,8 @@ namespace Dungeoneers
                 // northeast
                 else if ((keyboard.IsKeyDown(Keys.NumPad9) || keyboard.IsKeyDown(Keys.U)) && dungeon.floor[x + 1][y - 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x + 1, y - 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y - 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x + 1, y - 1)));
+                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y - 1)))
+                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x + 1, y - 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x + 1, y - 1)) != null)
                     {
@@ -449,8 +449,8 @@ namespace Dungeoneers
                 // southwest
                 else if ((keyboard.IsKeyDown(Keys.NumPad1) || keyboard.IsKeyDown(Keys.B)) && dungeon.floor[x - 1][y + 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x - 1, y + 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y + 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x - 1, y + 1)));
+                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y + 1)))
+                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x - 1, y + 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x - 1, y + 1)) != null)
                     {
@@ -476,8 +476,8 @@ namespace Dungeoneers
                 // southeast
                 else if ((keyboard.IsKeyDown(Keys.NumPad3) || keyboard.IsKeyDown(Keys.N)) && dungeon.floor[x + 1][y + 1] == 1)
                 {
-                    if (dungeon.manager.isMobAt(new Vector2(x + 1, y + 1)) && dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y + 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getMobAt(new Vector2(x + 1, y + 1)));
+                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y + 1)))
+                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x + 1, y + 1)));
 
                     else if (dungeon.manager.getDoor(new Vector2(x + 1, y + 1)) != null)
                     {

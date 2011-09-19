@@ -22,6 +22,7 @@ namespace Dungeoneers.entities.actions
                 if (exp != null)
                 {
                     exp.Current_Level += 1;
+                    exp.Current_LevelEXP = exp.Current_EXP - Meta.ExpLevel[exp.Current_Level - 1];
                 }
             }
         }

@@ -9,6 +9,7 @@ namespace Dungeoneers.entities.components
     class Experience : Component
     {
         public int Current_EXP { get; set; }
+        public int Current_LevelEXP { get; set; }
         public int Current_Level { get; set; }
 
         public Experience(int level, int exp)
@@ -16,6 +17,7 @@ namespace Dungeoneers.entities.components
             this.Name = "Experience";
             this.Current_EXP = exp;
             this.Current_Level = level;
+            this.Current_LevelEXP = 0;
         }
     }
 }

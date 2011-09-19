@@ -118,24 +118,14 @@ namespace Dungeoneers.managers
             return new List<Entity>(mobDict.Values);
         }
 
-        public bool isMobAt(Vector2 pos)
+        public Entity getAliveMobAt(Vector2 pos)
         {
             foreach (Entity mob in getMobList())
             {
                 Position position = mob.GetComponent("Position") as Position;
                 if (position.X == pos.X && position.Y == pos.Y)
-                    return true;
-            }
-            return false;
-        }
-
-        public Entity getMobAt(Vector2 pos)
-        {
-            foreach (Entity mob in getMobList())
-            {
-                Position position = mob.GetComponent("Position") as Position;
-                if (position.X == pos.X && position.Y == pos.Y)
-                    return mob;
+                    if ((mob.GetComponent("Hitpoints") as Hitpoints).Alive)
+                        return mob;
             }
             return null;
         }

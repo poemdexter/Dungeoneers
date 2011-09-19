@@ -23,6 +23,7 @@ namespace Dungeoneers.entities.actions
                 if (exp != null)
                 {
                     exp.Current_EXP += ((GainExperienceArgs)args).Amount;
+                    exp.Current_LevelEXP += ((GainExperienceArgs)args).Amount;
                     if (exp.Current_EXP >= Meta.ExpLevel[exp.Current_Level])
                         this.Entity.DoAction("LevelUp");
                 }

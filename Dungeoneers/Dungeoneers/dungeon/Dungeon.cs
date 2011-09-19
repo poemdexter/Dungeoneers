@@ -18,8 +18,8 @@ namespace Dungeoneers.dungeon
         public List<Entity> torchList;
         public List<Rectangle> roomList;
         private Dictionary<string, Texture2D> SpriteDict { get; set; }
-        int dwidth = 24;
-        int dheight = 24;
+        int dwidth = 64;
+        int dheight = 48;
 
         public EntityManager manager;
 
