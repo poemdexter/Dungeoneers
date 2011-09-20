@@ -68,6 +68,9 @@ namespace Dungeoneers
             dungeon.createDungeon();
             dungeon.addPlayer();
 
+            // set screenstate to playing the game
+            GameScreenStateManager.CurrentState = ScreenStates.Play;
+
             // set keyboard elapsed time to 0 so we're ready
             keyboardElapsedTime = 0;
 
@@ -175,6 +178,8 @@ namespace Dungeoneers
             sanimation = (Animation)dungeon.manager.StairsDown.GetComponent("Animation");
             spriteBatch.Draw(spriteDict["stairs_down"], new Vector2(sx * (scale * 8), sy * (scale * 8)), sanimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, sanimation.Effects, 0f);
 
+            // TODO draw dead mobs first
+
             // draw mobs
             foreach (Entity skeleton in dungeon.manager.getMobList())
             {
@@ -198,17 +203,26 @@ namespace Dungeoneers
             spriteBatch.Draw(panimation.SourceTexture, new Vector2(px * (scale * 8), py * (scale * 8)), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
             spriteBatch.End();
 
-
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
 
             // draw version
             spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.3a", new Vector2(0, leftViewport.Height - 15), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
 
             // draw messages
-            Message[] msgList = MessageManager.Instance.getMessageQueueCopy();
-            for (int x = 0; x < msgList.Length; x++)
+            string[] msgList = MessageManager.Instance.getTopMessagesToDisplay();
+            if (msgList != null)
             {
-                spriteBatch.DrawString(lofiFont, msgList[x].Msg, new Vector2(2, (x * 15) + 2), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+                for (int x = 0; x < msgList.Length; x++)
+                {
+                    spriteBatch.DrawString(lofiFont, msgList[x], new Vector2(2, (x * 15) + 2), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+                }
+            }
+
+            // draw message history
+            if (GameScreenStateManager.CurrentState == ScreenStates.MessageHistory)
+            {
+                spriteBatch.Draw(spriteDict["msg_history"], new Vector2(20, 20), spriteDict["msg_history"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                MessageManager.Instance.drawMessageHistory(spriteBatch, lofiFont, font_scale);
             }
 
             spriteBatch.End();
@@ -231,7 +245,7 @@ namespace Dungeoneers
 
             spriteBatch.DrawString(lofiFont, "EXP: " + exp.Current_EXP + "/" + Meta.ExpLevel[exp.Current_Level], new Vector2(24, 84), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             spriteBatch.Draw(spriteDict["ui_bar"], new Vector2(24, 99), spriteDict["ui_bar"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
-            int exp_ctr = (int)Math.Ceiling(((double)exp.Current_LevelEXP / (double)(Meta.ExpLevel[exp.Current_Level] - Meta.ExpLevel[exp.Current_Level -1])) * 20);
+            int exp_ctr = (int)Math.Ceiling(((double)exp.Current_LevelEXP / (double)(Meta.ExpLevel[exp.Current_Level] - Meta.ExpLevel[exp.Current_Level - 1])) * 20);
             for (int x = 0; x < exp_ctr; x++)
             {
                 spriteBatch.Draw(spriteDict["ui_barpiece_exp"], new Vector2(28 + (8 * x), 99), spriteDict["ui_barpiece_exp"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
@@ -274,231 +288,254 @@ namespace Dungeoneers
         {
             keyboardElapsedTime -= gameTime.ElapsedGameTime.Milliseconds;
 
-            if (keyboardElapsedTime <= 0 && !playerActed)
+            switch (GameScreenStateManager.CurrentState)
             {
-                int x = (int)((Position)dungeon.manager.player.GetComponent("Position")).X;
-                int y = (int)((Position)dungeon.manager.player.GetComponent("Position")).Y;
-
-                // left
-                if ((keyboard.IsKeyDown(Keys.NumPad4) || keyboard.IsKeyDown(Keys.H)) && dungeon.floor[x - 1][y] == 1)
-                {
-                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x - 1, y)));
-
-
-                    else if (dungeon.manager.getDoor(new Vector2(x - 1, y)) != null)
+                case ScreenStates.Play:
+                    if (keyboardElapsedTime <= 0 && !playerActed)
                     {
-                        Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y));
-                        if (!(door.GetComponent("Openable") as Openable).Opened)
+                        int x = (int)((Position)dungeon.manager.player.GetComponent("Position")).X;
+                        int y = (int)((Position)dungeon.manager.player.GetComponent("Position")).Y;
+
+                        // left
+                        if ((keyboard.IsKeyDown(Keys.NumPad4) || keyboard.IsKeyDown(Keys.H)) && dungeon.floor[x - 1][y] == 1)
                         {
-                            (door.GetComponent("Openable") as Openable).Opened = true;
-                            door.DoAction("NextFrameOfAnimation");
+                            if (dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y)))
+                                dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x - 1, y)));
+
+
+                            else if (dungeon.manager.getDoor(new Vector2(x - 1, y)) != null)
+                            {
+                                Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y));
+                                if (!(door.GetComponent("Openable") as Openable).Opened)
+                                {
+                                    (door.GetComponent("Openable") as Openable).Opened = true;
+                                    door.DoAction("NextFrameOfAnimation");
+                                }
+                                else
+                                {
+                                    dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 0)));
+                                    dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
+                                }
+                            }
+                            else
+                            {
+                                dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 0)));
+                                dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
+                            }
+                            keyboardElapsedTime = 200;
+                            playerActed = true;
                         }
-                        else
+
+                        // right
+                        else if ((keyboard.IsKeyDown(Keys.NumPad6) || keyboard.IsKeyDown(Keys.L)) && dungeon.floor[x + 1][y] == 1)
                         {
-                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 0)));
-                            dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
+                            if (dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y)))
+                                dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x + 1, y)));
+
+                            else if (dungeon.manager.getDoor(new Vector2(x + 1, y)) != null)
+                            {
+                                Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y));
+                                if (!(door.GetComponent("Openable") as Openable).Opened)
+                                {
+                                    (door.GetComponent("Openable") as Openable).Opened = true;
+                                    door.DoAction("NextFrameOfAnimation");
+                                }
+                                else
+                                {
+                                    dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 0)));
+                                    dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
+                                }
+                            }
+                            else
+                            {
+                                dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 0)));
+                                dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
+                            }
+                            keyboardElapsedTime = 200;
+                            playerActed = true;
+                        }
+
+                        // up
+                        else if ((keyboard.IsKeyDown(Keys.NumPad8) || keyboard.IsKeyDown(Keys.K)) && dungeon.floor[x][y - 1] == 1)
+                        {
+                            if (dungeon.manager.isMobAliveAtPos(new Vector2(x, y - 1)))
+                                dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x, y - 1)));
+
+                            else if (dungeon.manager.getDoor(new Vector2(x, y - 1)) != null)
+                            {
+                                Entity door = dungeon.manager.getDoor(new Vector2(x, y - 1));
+                                if (!(door.GetComponent("Openable") as Openable).Opened)
+                                {
+                                    (door.GetComponent("Openable") as Openable).Opened = true;
+                                    door.DoAction("NextFrameOfAnimation");
+                                }
+                                else
+                                {
+                                    dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, -1)));
+                                }
+                            }
+                            else
+                            {
+                                dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, -1)));
+                            }
+                            keyboardElapsedTime = 200;
+                            playerActed = true;
+                        }
+
+                        // down
+                        else if ((keyboard.IsKeyDown(Keys.NumPad2) || keyboard.IsKeyDown(Keys.J)) && dungeon.floor[x][y + 1] == 1)
+                        {
+                            if (dungeon.manager.isMobAliveAtPos(new Vector2(x, y + 1)))
+                                dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x, y + 1)));
+
+                            else if (dungeon.manager.getDoor(new Vector2(x, y + 1)) != null)
+                            {
+                                Entity door = dungeon.manager.getDoor(new Vector2(x, y + 1));
+                                if (!(door.GetComponent("Openable") as Openable).Opened)
+                                {
+                                    (door.GetComponent("Openable") as Openable).Opened = true;
+                                    door.DoAction("NextFrameOfAnimation");
+                                }
+                                else
+                                {
+                                    dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, 1)));
+                                }
+                            }
+                            else
+                            {
+                                dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, 1)));
+                            }
+                            keyboardElapsedTime = 200;
+                            playerActed = true;
+                        }
+
+                        // northwest
+                        else if ((keyboard.IsKeyDown(Keys.NumPad7) || keyboard.IsKeyDown(Keys.Y)) && dungeon.floor[x - 1][y - 1] == 1)
+                        {
+                            if (dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y - 1)))
+                                dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x - 1, y - 1)));
+
+                            else if (dungeon.manager.getDoor(new Vector2(x - 1, y - 1)) != null)
+                            {
+                                Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y - 1));
+                                if (!(door.GetComponent("Openable") as Openable).Opened)
+                                {
+                                    (door.GetComponent("Openable") as Openable).Opened = true;
+                                    door.DoAction("NextFrameOfAnimation");
+                                }
+                                else
+                                {
+                                    dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, -1)));
+                                }
+                            }
+                            else
+                            {
+                                dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, -1)));
+                            }
+                            keyboardElapsedTime = 200;
+                            playerActed = true;
+                        }
+
+                        // northeast
+                        else if ((keyboard.IsKeyDown(Keys.NumPad9) || keyboard.IsKeyDown(Keys.U)) && dungeon.floor[x + 1][y - 1] == 1)
+                        {
+                            if (dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y - 1)))
+                                dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x + 1, y - 1)));
+
+                            else if (dungeon.manager.getDoor(new Vector2(x + 1, y - 1)) != null)
+                            {
+                                Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y - 1));
+                                if (!(door.GetComponent("Openable") as Openable).Opened)
+                                {
+                                    (door.GetComponent("Openable") as Openable).Opened = true;
+                                    door.DoAction("NextFrameOfAnimation");
+                                }
+                                else
+                                {
+                                    dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, -1)));
+                                }
+                            }
+                            else
+                            {
+                                dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, -1)));
+                            }
+                            keyboardElapsedTime = 200;
+                            playerActed = true;
+                        }
+
+                        // southwest
+                        else if ((keyboard.IsKeyDown(Keys.NumPad1) || keyboard.IsKeyDown(Keys.B)) && dungeon.floor[x - 1][y + 1] == 1)
+                        {
+                            if (dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y + 1)))
+                                dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x - 1, y + 1)));
+
+                            else if (dungeon.manager.getDoor(new Vector2(x - 1, y + 1)) != null)
+                            {
+                                Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y + 1));
+                                if (!(door.GetComponent("Openable") as Openable).Opened)
+                                {
+                                    (door.GetComponent("Openable") as Openable).Opened = true;
+                                    door.DoAction("NextFrameOfAnimation");
+                                }
+                                else
+                                {
+                                    dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 1)));
+                                }
+                            }
+                            else
+                            {
+                                dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 1)));
+                            }
+                            keyboardElapsedTime = 200;
+                            playerActed = true;
+                        }
+
+                        // southeast
+                        else if ((keyboard.IsKeyDown(Keys.NumPad3) || keyboard.IsKeyDown(Keys.N)) && dungeon.floor[x + 1][y + 1] == 1)
+                        {
+                            if (dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y + 1)))
+                                dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x + 1, y + 1)));
+
+                            else if (dungeon.manager.getDoor(new Vector2(x + 1, y + 1)) != null)
+                            {
+                                Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y + 1));
+                                if (!(door.GetComponent("Openable") as Openable).Opened)
+                                {
+                                    (door.GetComponent("Openable") as Openable).Opened = true;
+                                    door.DoAction("NextFrameOfAnimation");
+                                }
+                                else
+                                {
+                                    dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 1)));
+                                }
+                            }
+                            else
+                            {
+                                dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 1)));
+                            }
+                            keyboardElapsedTime = 200;
+                            playerActed = true;
+                        }
+
+                        // message history
+                        else if (keyboard.IsKeyDown(Keys.M))
+                        {
+                            GameScreenStateManager.CurrentState = ScreenStates.MessageHistory;
+                            keyboardElapsedTime = 200;
                         }
                     }
-                    else
-                    {
-                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 0)));
-                        dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("left"));
-                    }
-                    keyboardElapsedTime = 150;
-                    playerActed = true;
-                }
+                    break;
 
-                // right
-                else if ((keyboard.IsKeyDown(Keys.NumPad6) || keyboard.IsKeyDown(Keys.L)) && dungeon.floor[x + 1][y] == 1)
-                {
-                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x + 1, y)));
-
-                    else if (dungeon.manager.getDoor(new Vector2(x + 1, y)) != null)
+                case ScreenStates.MessageHistory:
+                    if (keyboardElapsedTime <= 0)
                     {
-                        Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y));
-                        if (!(door.GetComponent("Openable") as Openable).Opened)
+                        if (keyboard.IsKeyDown(Keys.M) || keyboard.IsKeyDown(Keys.Escape))
                         {
-                            (door.GetComponent("Openable") as Openable).Opened = true;
-                            door.DoAction("NextFrameOfAnimation");
-                        }
-                        else
-                        {
-                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 0)));
-                            dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
+                            GameScreenStateManager.CurrentState = ScreenStates.Play;
+                            keyboardElapsedTime = 200;
                         }
                     }
-                    else
-                    {
-                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 0)));
-                        dungeon.manager.player.DoAction("ChangeDirectionOfAnimation", new ChangeDirectionOfAnimationArgs("right"));
-                    }
-                    keyboardElapsedTime = 150;
-                    playerActed = true;
-                }
-
-                // up
-                else if ((keyboard.IsKeyDown(Keys.NumPad8) || keyboard.IsKeyDown(Keys.K)) && dungeon.floor[x][y - 1] == 1)
-                {
-                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x, y - 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x, y - 1)));
-
-                    else if (dungeon.manager.getDoor(new Vector2(x, y - 1)) != null)
-                    {
-                        Entity door = dungeon.manager.getDoor(new Vector2(x, y - 1));
-                        if (!(door.GetComponent("Openable") as Openable).Opened)
-                        {
-                            (door.GetComponent("Openable") as Openable).Opened = true;
-                            door.DoAction("NextFrameOfAnimation");
-                        }
-                        else
-                        {
-                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, -1)));
-                        }
-                    }
-                    else
-                    {
-                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, -1)));
-                    }
-                    keyboardElapsedTime = 150;
-                    playerActed = true;
-                }
-
-                // down
-                else if ((keyboard.IsKeyDown(Keys.NumPad2) || keyboard.IsKeyDown(Keys.J)) && dungeon.floor[x][y + 1] == 1)
-                {
-                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x, y + 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x, y + 1)));
-
-                    else if (dungeon.manager.getDoor(new Vector2(x, y + 1)) != null)
-                    {
-                        Entity door = dungeon.manager.getDoor(new Vector2(x, y + 1));
-                        if (!(door.GetComponent("Openable") as Openable).Opened)
-                        {
-                            (door.GetComponent("Openable") as Openable).Opened = true;
-                            door.DoAction("NextFrameOfAnimation");
-                        }
-                        else
-                        {
-                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, 1)));
-                        }
-                    }
-                    else
-                    {
-                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(0, 1)));
-                    }
-                    keyboardElapsedTime = 150;
-                    playerActed = true;
-                }
-
-                // northwest
-                else if ((keyboard.IsKeyDown(Keys.NumPad7) || keyboard.IsKeyDown(Keys.Y)) && dungeon.floor[x - 1][y - 1] == 1)
-                {
-                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y - 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x - 1, y - 1)));
-
-                    else if (dungeon.manager.getDoor(new Vector2(x - 1, y - 1)) != null)
-                    {
-                        Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y - 1));
-                        if (!(door.GetComponent("Openable") as Openable).Opened)
-                        {
-                            (door.GetComponent("Openable") as Openable).Opened = true;
-                            door.DoAction("NextFrameOfAnimation");
-                        }
-                        else
-                        {
-                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, -1)));
-                        }
-                    }
-                    else
-                    {
-                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, -1)));
-                    }
-                    keyboardElapsedTime = 150;
-                    playerActed = true;
-                }
-
-                // northeast
-                else if ((keyboard.IsKeyDown(Keys.NumPad9) || keyboard.IsKeyDown(Keys.U)) && dungeon.floor[x + 1][y - 1] == 1)
-                {
-                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y - 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x + 1, y - 1)));
-
-                    else if (dungeon.manager.getDoor(new Vector2(x + 1, y - 1)) != null)
-                    {
-                        Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y - 1));
-                        if (!(door.GetComponent("Openable") as Openable).Opened)
-                        {
-                            (door.GetComponent("Openable") as Openable).Opened = true;
-                            door.DoAction("NextFrameOfAnimation");
-                        }
-                        else
-                        {
-                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, -1)));
-                        }
-                    }
-                    else
-                    {
-                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, -1)));
-                    }
-                    keyboardElapsedTime = 150;
-                    playerActed = true;
-                }
-
-                // southwest
-                else if ((keyboard.IsKeyDown(Keys.NumPad1) || keyboard.IsKeyDown(Keys.B)) && dungeon.floor[x - 1][y + 1] == 1)
-                {
-                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x - 1, y + 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x - 1, y + 1)));
-
-                    else if (dungeon.manager.getDoor(new Vector2(x - 1, y + 1)) != null)
-                    {
-                        Entity door = dungeon.manager.getDoor(new Vector2(x - 1, y + 1));
-                        if (!(door.GetComponent("Openable") as Openable).Opened)
-                        {
-                            (door.GetComponent("Openable") as Openable).Opened = true;
-                            door.DoAction("NextFrameOfAnimation");
-                        }
-                        else
-                        {
-                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 1)));
-                        }
-                    }
-                    else
-                    {
-                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(-1, 1)));
-                    }
-                    keyboardElapsedTime = 150;
-                    playerActed = true;
-                }
-
-                // southeast
-                else if ((keyboard.IsKeyDown(Keys.NumPad3) || keyboard.IsKeyDown(Keys.N)) && dungeon.floor[x + 1][y + 1] == 1)
-                {
-                    if (dungeon.manager.isMobAliveAtPos(new Vector2(x + 1, y + 1)))
-                        dungeon.manager.attackPhase(dungeon.manager.player, dungeon.manager.getAliveMobAt(new Vector2(x + 1, y + 1)));
-
-                    else if (dungeon.manager.getDoor(new Vector2(x + 1, y + 1)) != null)
-                    {
-                        Entity door = dungeon.manager.getDoor(new Vector2(x + 1, y + 1));
-                        if (!(door.GetComponent("Openable") as Openable).Opened)
-                        {
-                            (door.GetComponent("Openable") as Openable).Opened = true;
-                            door.DoAction("NextFrameOfAnimation");
-                        }
-                        else
-                        {
-                            dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 1)));
-                        }
-                    }
-                    else
-                    {
-                        dungeon.manager.player.DoAction("ChangeDeltaPosition", new ChangePositionArgs(new Vector2(1, 1)));
-                    }
-                    keyboardElapsedTime = 150;
-                    playerActed = true;
-                }
+                    break;
             }
         }
 
@@ -523,6 +560,7 @@ namespace Dungeoneers
             spriteDict.Add("ui_barpiece_mp", Content.Load<Texture2D>("gui/ui_barpiece_mp"));
             spriteDict.Add("shrub", Content.Load<Texture2D>("env/shrub"));
             spriteDict.Add("item_skull", Content.Load<Texture2D>("items/item_skull"));
+            spriteDict.Add("msg_history", Content.Load<Texture2D>("gui/msg_history_bg"));
         }
 
         private void drawDungeon(SpriteBatch batch)

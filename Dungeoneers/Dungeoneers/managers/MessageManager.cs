@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Dungeoneers.managers
 {
@@ -10,6 +11,7 @@ namespace Dungeoneers.managers
     {
         private static MessageManager instance;
         private Queue<Message> messageQueue;
+        private List<string> messageHistory;
 
         public static MessageManager Instance
         {
@@ -26,16 +28,35 @@ namespace Dungeoneers.managers
         private MessageManager()
         {
             messageQueue = new Queue<Message>();
+            messageHistory = new List<string>();
         }
 
         public void addMessage(string message)
         {
             messageQueue.Enqueue(new Message(message, 5000));
+            messageHistory.Add(message);
         }
 
-        public Message[] getMessageQueueCopy()
+        public string[] getTopMessagesToDisplay()
         {
-            return messageQueue.ToArray();
+            Message[] temp = messageQueue.ToArray();
+            if (temp.Length > 0)
+            {
+                string[] ret = new string[Math.Min(5, temp.Length)];
+                for (int x = 0; x < Math.Min(5, temp.Length); x++)
+                {
+                    ret[x] = temp[temp.Length - Math.Min((5 - x), temp.Length)].Msg;
+                }
+                return ret;
+            }
+            return null;
+        }
+
+        // for message history state
+        public void drawMessageHistory(SpriteBatch spriteBatch, SpriteFont font, float scale)
+        {
+            spriteBatch.DrawString(font, "poemdexter line 1", new Vector2(40, 40), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(font, "poemdexter line 2", new Vector2(40, 55), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
         }
 
         public void updateQueue(int timeElapsed)
@@ -53,11 +74,20 @@ namespace Dungeoneers.managers
     {
         public string Msg { get; set; }
         public int TimeCreated { get; set; }
+        public Vector2 Position { get; set; }
 
         public Message(string msg, int timeCreated)
         {
             Msg = msg;
             TimeCreated = timeCreated;
+            Position = Vector2.Zero;
+        }
+
+        public Message(string msg, int timeCreated, Vector2 position)
+        {
+            Msg = msg;
+            TimeCreated = timeCreated;
+            Position = position;
         }
     }
 }
