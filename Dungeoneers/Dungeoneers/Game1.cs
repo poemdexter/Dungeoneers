@@ -209,12 +209,14 @@ namespace Dungeoneers
             spriteBatch.DrawString(lofiFont, "Dungeoneers Project 0.3a", new Vector2(0, leftViewport.Height - 15), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
 
             // draw messages
-            string[] msgList = MessageManager.Instance.getTopMessagesToDisplay();
+            List<Message> msgList = MessageManager.Instance.getTopMessagesToDisplay();
             if (msgList != null)
             {
-                for (int x = 0; x < msgList.Length; x++)
+                int n = 0;
+                foreach (Message msg in msgList)
                 {
-                    spriteBatch.DrawString(lofiFont, msgList[x], new Vector2(2, (x * 15) + 2), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(lofiFont, msg.Msg, new Vector2(2, (n * 15) + 2), msg.TextColor, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+                    n++;
                 }
             }
 
@@ -536,12 +538,16 @@ namespace Dungeoneers
                             MessageManager.Instance.resetPageNumber();
                             keyboardElapsedTime = 200;
                         }
-                        else if (keyboard.IsKeyDown(Keys.PageUp)
+                        else if (keyboard.IsKeyDown(Keys.PageUp))
                         {
+                            // get next page up ... page++
+                            MessageManager.Instance.tryPageUp();
                             keyboardElapsedTime = 200;
                         }
-                        else if (keyboard.IsKeyDown(Keys.PageDown)
+                        else if (keyboard.IsKeyDown(Keys.PageDown))
                         {
+                            // get next page down ... page--
+                            MessageManager.Instance.tryPageDown();
                             keyboardElapsedTime = 200;
                         }
                     }
