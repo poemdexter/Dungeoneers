@@ -521,6 +521,7 @@ namespace Dungeoneers
                         else if (keyboard.IsKeyDown(Keys.M))
                         {
                             GameScreenStateManager.CurrentState = ScreenStates.MessageHistory;
+                            MessageManager.Instance.resetPageNumber();
                             keyboardElapsedTime = 200;
                         }
                     }
@@ -532,6 +533,15 @@ namespace Dungeoneers
                         if (keyboard.IsKeyDown(Keys.M) || keyboard.IsKeyDown(Keys.Escape))
                         {
                             GameScreenStateManager.CurrentState = ScreenStates.Play;
+                            MessageManager.Instance.resetPageNumber();
+                            keyboardElapsedTime = 200;
+                        }
+                        else if (keyboard.IsKeyDown(Keys.PageUp)
+                        {
+                            keyboardElapsedTime = 200;
+                        }
+                        else if (keyboard.IsKeyDown(Keys.PageDown)
+                        {
                             keyboardElapsedTime = 200;
                         }
                     }

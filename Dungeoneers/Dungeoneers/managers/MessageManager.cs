@@ -12,6 +12,8 @@ namespace Dungeoneers.managers
         private static MessageManager instance;
         private Queue<Message> messageQueue;
         private List<string> messageHistory;
+        private int PageNumber { get; set; }
+        private const int HISTORY_LINES = 29;
 
         public static MessageManager Instance
         {
@@ -29,6 +31,11 @@ namespace Dungeoneers.managers
         {
             messageQueue = new Queue<Message>();
             messageHistory = new List<string>();
+        }
+
+        public void resetPageNumber()
+        {
+            PageNumber = 1;
         }
 
         public void addMessage(string message)
@@ -52,11 +59,26 @@ namespace Dungeoneers.managers
             return null;
         }
 
+        public string[] getFirstPageOfHistory()
+        {
+            PageNumber = 1;
+            if (messageHistory.ToArray().Length - 1 < HISTORY_LINES)
+            {
+                string[] temp = messageHistory.ToArray();
+                Array.Reverse(temp);
+                return temp;
+            }
+            else
+                return null;
+        }
+
         // for message history state
         public void drawMessageHistory(SpriteBatch spriteBatch, SpriteFont font, float scale)
         {
-            spriteBatch.DrawString(font, "poemdexter line 1", new Vector2(40, 40), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
-            spriteBatch.DrawString(font, "poemdexter line 2", new Vector2(40, 55), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
+            for (int x = 0; x < HISTORY_LINES; x++)
+            {
+                spriteBatch.DrawString(font, "poemdexter line 1", new Vector2(40, 40 + (15*x)), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
+            }
         }
 
         public void updateQueue(int timeElapsed)
