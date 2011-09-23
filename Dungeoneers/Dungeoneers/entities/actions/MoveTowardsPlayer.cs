@@ -264,10 +264,7 @@ namespace Dungeoneers.entities.actions
 
         private int addMobWeight(bool alive)
         {
-            if (alive)
-                return 99;
-            else
-                return 0;
+            return alive ? 99 : 0;
         }
 
         // grab the AIPoint based on vector

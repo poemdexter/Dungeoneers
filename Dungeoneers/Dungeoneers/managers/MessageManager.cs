@@ -19,6 +19,8 @@ namespace Dungeoneers.managers
         public bool PageUp { get; set; }
         public bool PageDown { get; set; }
 
+        public Message PortraitMessage { get; set; }
+
         public static MessageManager Instance
         {
             get
@@ -137,6 +139,11 @@ namespace Dungeoneers.managers
                     messageQueue.Dequeue();
             }
         }
+
+        public void doPortraitMessage(string msg, Color color, string portrait)
+        {
+            PortraitMessage = new Message(msg, color, portrait);
+        }
     }
 
     class Message
@@ -144,6 +151,7 @@ namespace Dungeoneers.managers
         public string Msg { get; set; }
         public int TimeCreated { get; set; }
         public Color TextColor { get; set; }
+        public string Portrait { get; set; }
 
         public Message(string msg, int timeCreated)
         {
@@ -157,6 +165,15 @@ namespace Dungeoneers.managers
             Msg = msg;
             TimeCreated = timeCreated;
             TextColor = color;
+        }
+
+        // for portrait messages popups
+
+        public Message(string msg, Color color, string portrait)
+        {
+            Msg = msg;
+            TextColor = color;
+            Portrait = portrait;
         }
     }
 }

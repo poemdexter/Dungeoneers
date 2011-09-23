@@ -227,6 +227,15 @@ namespace Dungeoneers
                 MessageManager.Instance.drawMessageHistory(spriteBatch, lofiFont, font_scale);
             }
 
+            // draw portrait message
+            if (GameScreenStateManager.CurrentState == ScreenStates.Portrait_Msg)
+            {
+                Message msg = MessageManager.Instance.PortraitMessage;
+                // TODO draw the background to portrait message
+                spriteBatch.Draw(spriteDict[msg.Portrait], new Vector2(300, 600), spriteDict[msg.Portrait].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(lofiFont, msg.Msg, new Vector2(400, 600), msg.TextColor, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
+            }
+
             spriteBatch.End();
 
             // right side of screen
@@ -526,6 +535,13 @@ namespace Dungeoneers
                             MessageManager.Instance.resetPageNumber();
                             keyboardElapsedTime = 200;
                         }
+
+                        else if (keyboard.IsKeyDown(Keys.Z))
+                        {
+                            GameScreenStateManager.CurrentState = ScreenStates.Portrait_Msg;
+                            MessageManager.Instance.doPortraitMessage("yospos bitch", Color.White, "pic_bandit");
+                            keyboardElapsedTime = 200;
+                        }
                     }
                     break;
 
@@ -548,6 +564,17 @@ namespace Dungeoneers
                         {
                             // get next page down ... page--
                             MessageManager.Instance.tryPageDown();
+                            keyboardElapsedTime = 200;
+                        }
+                    }
+                    break;
+
+                case ScreenStates.Portrait_Msg:
+                    if (keyboardElapsedTime <= 0)
+                    {
+                        if (keyboard.IsKeyDown(Keys.Space))
+                        {
+                            GameScreenStateManager.CurrentState = ScreenStates.Play;
                             keyboardElapsedTime = 200;
                         }
                     }
@@ -577,6 +604,7 @@ namespace Dungeoneers
             spriteDict.Add("shrub", Content.Load<Texture2D>("env/shrub"));
             spriteDict.Add("item_skull", Content.Load<Texture2D>("items/item_skull"));
             spriteDict.Add("msg_history", Content.Load<Texture2D>("gui/msg_history_bg"));
+            spriteDict.Add("pic_bandit", Content.Load<Texture2D>("portrait/portrait_bandit"));
         }
 
         private void drawDungeon(SpriteBatch batch)

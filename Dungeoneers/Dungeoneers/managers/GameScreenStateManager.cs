@@ -13,6 +13,7 @@ namespace Dungeoneers.managers
     public enum ScreenStates
     {
         Play = 1,
-        MessageHistory = 2
+        MessageHistory = 2,
+        Portrait_Msg = 3
     }
 }
