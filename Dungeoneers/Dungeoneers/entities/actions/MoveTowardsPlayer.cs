@@ -73,7 +73,9 @@ namespace Dungeoneers.entities.actions
                 // 1 X 5
                 // 8 7 6
                 tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y);
-                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y] == 1 && args.manager.isDoorOpen(tempV)) // 1
+                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y] == 1 && 
+                    args.manager.isDoorOpen(tempV) &&
+                    !args.manager.isMobAliveAtPos(tempV)) // 1
                 {
                     if (!isInList(tempV, closedList)) // 5
                     {
@@ -93,7 +95,8 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y - 1);
-                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV)) // 2
+                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV) &&
+                    !args.manager.isMobAliveAtPos(tempV)) // 2
                 {
                     if (!isInList(tempV, closedList))
                     {
@@ -113,7 +116,8 @@ namespace Dungeoneers.entities.actions
                 }
                 
                 tempV = new Vector2(parentAI.Position.X, parentAI.Position.Y - 1);
-                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV)) // 3
+                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV) &&
+                    !args.manager.isMobAliveAtPos(tempV)) // 3
                 {
                     if (!isInList(tempV, closedList))
                     {
@@ -133,7 +137,8 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y - 1);
-                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV)) // 4
+                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV) &&
+                    !args.manager.isMobAliveAtPos(tempV)) // 4
                 { 
                     if (!isInList(tempV, closedList))
                     {
@@ -153,7 +158,8 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y);
-                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y] == 1 && args.manager.isDoorOpen(tempV)) // 5
+                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y] == 1 && args.manager.isDoorOpen(tempV) &&
+                    !args.manager.isMobAliveAtPos(tempV)) // 5
                 {
                     if (!isInList(tempV, closedList))
                     {
@@ -173,7 +179,8 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y + 1);
-                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV)) // 6
+                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV) &&
+                    !args.manager.isMobAliveAtPos(tempV)) // 6
                 {
                     if (!isInList(tempV, closedList))
                     {
@@ -193,7 +200,8 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X, parentAI.Position.Y + 1);
-                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV)) // 7
+                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV) &&
+                    !args.manager.isMobAliveAtPos(tempV)) // 7
                 {
                     if (!isInList(tempV, closedList))
                     {
@@ -213,7 +221,8 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y + 1);
-                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV)) // 8
+                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV) &&
+                    !args.manager.isMobAliveAtPos(tempV)) // 8
                 {
                     if (!isInList(tempV, closedList))
                     {
