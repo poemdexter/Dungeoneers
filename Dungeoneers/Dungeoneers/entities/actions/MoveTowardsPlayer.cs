@@ -27,7 +27,7 @@ namespace Dungeoneers.entities.actions
                 if (position != null)
                 {
                     Vector2 next = getNextPointToPlayer(position, arguments);
-                    if (next != Vector2.Zero)
+                    if (next != Vector2.Zero && !arguments.manager.isMobAliveAtPos(next))
                     {
                         this.Entity.DoAction("ChangeAbsPosition", new ChangePositionArgs(next));
                     }
@@ -73,20 +73,18 @@ namespace Dungeoneers.entities.actions
                 // 1 X 5
                 // 8 7 6
                 tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y);
-                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y] == 1 && 
-                    args.manager.isDoorOpen(tempV) &&
-                    !args.manager.isMobAliveAtPos(tempV)) // 1
+                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y] == 1 && args.manager.isDoorOpen(tempV)) // 1
                 {
                     if (!isInList(tempV, closedList)) // 5
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10 + addMobWeight(args.manager.isMobAliveAtPos(tempV)), getH(tempV, player)));
                         }
                         else
                         {
                             AIPoint pathCheckPoint = getAIPoint(tempV, openList);
-                            if (pathCheckPoint.G > parentAI.G + 10)
+                            if (pathCheckPoint.G > parentAI.G + 10 + addMobWeight(args.manager.isMobAliveAtPos(tempV)))
                             {
                                 pathCheckPoint.Parent = parent;
                             }
@@ -95,19 +93,18 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y - 1);
-                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV) &&
-                    !args.manager.isMobAliveAtPos(tempV)) // 2
+                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV)) // 2
                 {
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14 + addMobWeight(args.manager.isMobAliveAtPos(tempV)), getH(tempV, player)));
                         }
                         else
                         {
                             AIPoint pathCheckPoint = getAIPoint(tempV, openList);
-                            if (pathCheckPoint.G > parentAI.G + 14)
+                            if (pathCheckPoint.G > parentAI.G + 14 + addMobWeight(args.manager.isMobAliveAtPos(tempV)))
                             {
                                 pathCheckPoint.Parent = parent;
                             }
@@ -116,19 +113,18 @@ namespace Dungeoneers.entities.actions
                 }
                 
                 tempV = new Vector2(parentAI.Position.X, parentAI.Position.Y - 1);
-                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV) &&
-                    !args.manager.isMobAliveAtPos(tempV)) // 3
+                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV)) // 3
                 {
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10 + addMobWeight(args.manager.isMobAliveAtPos(tempV)), getH(tempV, player)));
                         }
                         else
                         {
                             AIPoint pathCheckPoint = getAIPoint(tempV, openList);
-                            if (pathCheckPoint.G > parentAI.G + 10)
+                            if (pathCheckPoint.G > parentAI.G + 10 + addMobWeight(args.manager.isMobAliveAtPos(tempV)))
                             {
                                 pathCheckPoint.Parent = parent;
                             }
@@ -137,19 +133,18 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y - 1);
-                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV) &&
-                    !args.manager.isMobAliveAtPos(tempV)) // 4
+                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y - 1] == 1 && args.manager.isDoorOpen(tempV)) // 4
                 { 
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14 + addMobWeight(args.manager.isMobAliveAtPos(tempV)), getH(tempV, player)));
                         }
                         else
                         {
                             AIPoint pathCheckPoint = getAIPoint(tempV, openList);
-                            if (pathCheckPoint.G > parentAI.G + 14)
+                            if (pathCheckPoint.G > parentAI.G + 14 + addMobWeight(args.manager.isMobAliveAtPos(tempV)))
                             {
                                 pathCheckPoint.Parent = parent;
                             }
@@ -158,19 +153,18 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y);
-                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y] == 1 && args.manager.isDoorOpen(tempV) &&
-                    !args.manager.isMobAliveAtPos(tempV)) // 5
+                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y] == 1 && args.manager.isDoorOpen(tempV)) // 5
                 {
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10 + addMobWeight(args.manager.isMobAliveAtPos(tempV)), getH(tempV, player)));
                         }
                         else
                         {
                             AIPoint pathCheckPoint = getAIPoint(tempV, openList);
-                            if (pathCheckPoint.G > parentAI.G + 10)
+                            if (pathCheckPoint.G > parentAI.G + 10 + addMobWeight(args.manager.isMobAliveAtPos(tempV)))
                             {
                                 pathCheckPoint.Parent = parent;
                             }
@@ -179,19 +173,18 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X + 1, parentAI.Position.Y + 1);
-                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV) &&
-                    !args.manager.isMobAliveAtPos(tempV)) // 6
+                if (args.floor[(int)parentAI.Position.X + 1][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV)) // 6
                 {
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14 + addMobWeight(args.manager.isMobAliveAtPos(tempV)), getH(tempV, player)));
                         }
                         else
                         {
                             AIPoint pathCheckPoint = getAIPoint(tempV, openList);
-                            if (pathCheckPoint.G > parentAI.G + 14)
+                            if (pathCheckPoint.G > parentAI.G + 14 + addMobWeight(args.manager.isMobAliveAtPos(tempV)))
                             {
                                 pathCheckPoint.Parent = parent;
                             }
@@ -200,19 +193,18 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X, parentAI.Position.Y + 1);
-                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV) &&
-                    !args.manager.isMobAliveAtPos(tempV)) // 7
+                if (args.floor[(int)parentAI.Position.X][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV)) // 7
                 {
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 10 + addMobWeight(args.manager.isMobAliveAtPos(tempV)), getH(tempV, player)));
                         }
                         else
                         {
                             AIPoint pathCheckPoint = getAIPoint(tempV, openList);
-                            if (pathCheckPoint.G > parentAI.G + 10)
+                            if (pathCheckPoint.G > parentAI.G + 10 + addMobWeight(args.manager.isMobAliveAtPos(tempV)))
                             {
                                 pathCheckPoint.Parent = parent;
                             }
@@ -221,19 +213,18 @@ namespace Dungeoneers.entities.actions
                 }
 
                 tempV = new Vector2(parentAI.Position.X - 1, parentAI.Position.Y + 1);
-                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV) &&
-                    !args.manager.isMobAliveAtPos(tempV)) // 8
+                if (args.floor[(int)parentAI.Position.X - 1][(int)parentAI.Position.Y + 1] == 1 && args.manager.isDoorOpen(tempV)) // 8
                 {
                     if (!isInList(tempV, closedList))
                     {
                         if (!isInList(tempV, openList)) // 6
                         {
-                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14, getG(tempV, player)));
+                            openList.Add(new AIPoint(tempV, parent, parentAI.G + 14 + addMobWeight(args.manager.isMobAliveAtPos(tempV)), getH(tempV, player)));
                         }
                         else
                         {
                             AIPoint pathCheckPoint = getAIPoint(tempV, openList);
-                            if (pathCheckPoint.G > parentAI.G + 14)
+                            if (pathCheckPoint.G > parentAI.G + 14 + addMobWeight(args.manager.isMobAliveAtPos(tempV)))
                             {
                                 pathCheckPoint.Parent = parent;
                             }
@@ -271,6 +262,14 @@ namespace Dungeoneers.entities.actions
             return Vector2.Zero;
         }
 
+        private int addMobWeight(bool alive)
+        {
+            if (alive)
+                return 99;
+            else
+                return 0;
+        }
+
         // grab the AIPoint based on vector
         public AIPoint getAIPoint(Vector2 v, List<AIPoint> list)
         {
@@ -294,7 +293,7 @@ namespace Dungeoneers.entities.actions
         }
 
         // gets manhattan distance from mob to player
-        public int getG(Vector2 mob, Vector2 player)
+        public int getH(Vector2 mob, Vector2 player)
         {
             return (int)(Math.Abs(mob.X - player.X) + Math.Abs(mob.Y - player.Y));
         }
