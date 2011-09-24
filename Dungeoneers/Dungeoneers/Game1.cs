@@ -24,11 +24,10 @@ namespace Dungeoneers
         SpriteFont lofiFont;
 
         // Keyboard states used to determine key presses
-        KeyboardState currentKeyboardState;
-        KeyboardState previousKeyboardState;
+        KeyboardState currentKeyboardState, previousKeyboardState;
         int keyboardElapsedTime;
 
-        Viewport leftViewport, rightViewport;
+        Viewport leftViewport, rightViewport, wholeViewport;
 
         private int windowHeight = 720;
         private int windowWidth = 1280;
@@ -41,6 +40,8 @@ namespace Dungeoneers
         int torch_elapsedTime, torch_frameTime;
 
         Dictionary<string, Texture2D> spriteDict;
+
+
 
         public Game1()
         {
@@ -61,6 +62,7 @@ namespace Dungeoneers
             lofiFont = Content.Load<SpriteFont>("font/lofi_font");
             loadSpriteDictionary();
 
+            wholeViewport = new Viewport(0, 0, windowWidth, windowHeight);
             leftViewport = new Viewport(0, 0, 960, 720);
             rightViewport = new Viewport(960, 0, 320, 720);
 
@@ -201,6 +203,13 @@ namespace Dungeoneers
             int py = (int)((Position)dungeon.manager.player.GetComponent("Position")).Y;
             Animation panimation = (Animation)dungeon.manager.player.GetComponent("Animation");
             spriteBatch.Draw(panimation.SourceTexture, new Vector2(px * (scale * 8), py * (scale * 8)), panimation.SourceRect, Color.White, 0f, Vector2.Zero, scale, panimation.Effects, 0f);
+            
+            // inspect state
+            if (GameScreenStateManager.CurrentState == ScreenStates.Inspect)
+            {
+                spriteBatch.Draw(spriteDict["inspect"], new Vector2(InspectManager.Position.X * (scale * 8), InspectManager.Position.Y * (scale * 8)), spriteDict["inspect"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            }
+
             spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
@@ -294,6 +303,7 @@ namespace Dungeoneers
             spriteBatch.DrawString(lofiFont, "Ranged: -unequipped-", new Vector2(24, 284), Color.White, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
 
             spriteBatch.End();
+
             base.Draw(gameTime);
         }
 
@@ -304,6 +314,8 @@ namespace Dungeoneers
             switch (GameScreenStateManager.CurrentState)
             {
                 case ScreenStates.Play:
+
+                    // keyboard stuff
                     if (keyboardElapsedTime <= 0 && !playerActed)
                     {
                         int x = (int)((Position)dungeon.manager.player.GetComponent("Position")).X;
@@ -538,6 +550,13 @@ namespace Dungeoneers
                             keyboardElapsedTime = 200;
                         }
 
+                        else if (keyboard.IsKeyDown(Keys.I))
+                        {
+                            GameScreenStateManager.CurrentState = ScreenStates.Inspect;
+                            InspectManager.resetInspection(dungeon.manager.player);
+                            keyboardElapsedTime = 200;
+                        }
+
                         // message with portrait
 
                         //else if (keyboard.IsKeyDown(Keys.Z))
@@ -583,6 +602,63 @@ namespace Dungeoneers
                         }
                     }
                     break;
+
+                case ScreenStates.Inspect:
+                    if (keyboardElapsedTime <= 0)
+                    {
+                        if (keyboard.IsKeyDown(Keys.NumPad1))
+                        {
+                            InspectManager.Position += new Vector2(-1, 1);
+                            keyboardElapsedTime = 200;
+                        }
+                        else if (keyboard.IsKeyDown(Keys.NumPad2))
+                        {
+                            InspectManager.Position += new Vector2(0, 1);
+                            keyboardElapsedTime = 200;
+                        }
+                        else if (keyboard.IsKeyDown(Keys.NumPad3))
+                        {
+                            InspectManager.Position += new Vector2(1, 1);
+                            keyboardElapsedTime = 200;
+                        }
+                        else if (keyboard.IsKeyDown(Keys.NumPad4))
+                        {
+                            InspectManager.Position += new Vector2(-1, 0);
+                            keyboardElapsedTime = 200;
+                        }
+                        else if (keyboard.IsKeyDown(Keys.NumPad6))
+                        {
+                            InspectManager.Position += new Vector2(1, 0);
+                            keyboardElapsedTime = 200;
+                        }
+                        else if (keyboard.IsKeyDown(Keys.NumPad7))
+                        {
+                            InspectManager.Position += new Vector2(-1, -1);
+                            keyboardElapsedTime = 200;
+                        }
+                        else if (keyboard.IsKeyDown(Keys.NumPad8))
+                        {
+                            InspectManager.Position += new Vector2(0, -1);
+                            keyboardElapsedTime = 200;
+                        }
+                        else if (keyboard.IsKeyDown(Keys.NumPad9))
+                        {
+                            InspectManager.Position += new Vector2(1, -1);
+                            keyboardElapsedTime = 200;
+                        }
+
+                        else if (keyboard.IsKeyDown(Keys.Enter))
+                        {
+                            InspectManager.inspect(dungeon.manager);
+                            keyboardElapsedTime = 200;
+                        }
+                        else if (keyboard.IsKeyDown(Keys.Escape))
+                        {
+                            GameScreenStateManager.CurrentState = ScreenStates.Play;
+                            keyboardElapsedTime = 200;
+                        }
+                    }
+                    break;
             }
         }
 
@@ -610,6 +686,7 @@ namespace Dungeoneers
             spriteDict.Add("msg_history", Content.Load<Texture2D>("gui/msg_history_bg"));
             spriteDict.Add("pic_bandit", Content.Load<Texture2D>("portrait/portrait_bandit"));
             spriteDict.Add("pic_msg_bg", Content.Load<Texture2D>("gui/msg_pic_bg"));
+            spriteDict.Add("inspect", Content.Load<Texture2D>("gui/target_inspect"));
         }
 
         private void drawDungeon(SpriteBatch batch)

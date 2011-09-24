@@ -14,6 +14,7 @@ namespace Dungeoneers.managers
     {
         Play = 1,
         MessageHistory = 2,
-        Portrait_Msg = 3
+        Portrait_Msg = 3,
+        Inspect = 4
     }
 }
