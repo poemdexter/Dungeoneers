@@ -231,9 +231,11 @@ namespace Dungeoneers
             if (GameScreenStateManager.CurrentState == ScreenStates.Portrait_Msg)
             {
                 Message msg = MessageManager.Instance.PortraitMessage;
-                // TODO draw the background to portrait message
-                spriteBatch.Draw(spriteDict[msg.Portrait], new Vector2(300, 600), spriteDict[msg.Portrait].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(lofiFont, msg.Msg, new Vector2(400, 600), msg.TextColor, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
+                spriteBatch.Draw(spriteDict["pic_msg_bg"], new Vector2(100, 560), spriteDict["pic_msg_bg"].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(spriteDict[msg.Portrait], new Vector2(120, 580), spriteDict[msg.Portrait].Bounds, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(lofiFont, msg.Msg, new Vector2(160, 585), msg.TextColor, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+                //spriteBatch.DrawString(lofiFont, msg.Msg, new Vector2(160, 605), msg.TextColor, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
+                //spriteBatch.DrawString(lofiFont, msg.Msg, new Vector2(160, 625), msg.TextColor, 0, Vector2.Zero, font_scale, SpriteEffects.None, 0);
             }
 
             spriteBatch.End();
@@ -536,12 +538,14 @@ namespace Dungeoneers
                             keyboardElapsedTime = 200;
                         }
 
-                        else if (keyboard.IsKeyDown(Keys.Z))
-                        {
-                            GameScreenStateManager.CurrentState = ScreenStates.Portrait_Msg;
-                            MessageManager.Instance.doPortraitMessage("yospos bitch", Color.White, "pic_bandit");
-                            keyboardElapsedTime = 200;
-                        }
+                        // message with portrait
+
+                        //else if (keyboard.IsKeyDown(Keys.Z))
+                        //{
+                        //    GameScreenStateManager.CurrentState = ScreenStates.Portrait_Msg;
+                        //    MessageManager.Instance.doPortraitMessage("yospos, bitch.", Color.White, "pic_bandit");
+                        //    keyboardElapsedTime = 200;
+                        //}
                     }
                     break;
 
@@ -605,6 +609,7 @@ namespace Dungeoneers
             spriteDict.Add("item_skull", Content.Load<Texture2D>("items/item_skull"));
             spriteDict.Add("msg_history", Content.Load<Texture2D>("gui/msg_history_bg"));
             spriteDict.Add("pic_bandit", Content.Load<Texture2D>("portrait/portrait_bandit"));
+            spriteDict.Add("pic_msg_bg", Content.Load<Texture2D>("gui/msg_pic_bg"));
         }
 
         private void drawDungeon(SpriteBatch batch)
