@@ -20,7 +20,17 @@ namespace Dungeoneers.managers
 
         public static void inspect(EntityManager manager)
         {
- 
+            Entity entity = manager.getAliveMobAt(Position);
+            if (entity != null)
+            {
+                // do display mob info
+            }
+
+            List<Entity> entities = manager.floorItems[Position];
+            if (entities != null && entities.Count > 0)
+            {
+                // do display floor items
+            }
         }
     }
 }
